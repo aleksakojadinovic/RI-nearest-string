@@ -43,12 +43,6 @@ def print_problem(problem_input):
     print("\t" + "\n\t".join(problem_input['strings']))
 
 
-def run_and_time(solver, problem):
-    start_time = time.time()
-    res = solver(problem)
-    end_time = time.time()
-    elapsed = end_time - start_time
-    res['time'] = elapsed
-    return res
+
     
 

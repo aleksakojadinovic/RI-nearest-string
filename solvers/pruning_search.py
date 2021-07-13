@@ -1,4 +1,3 @@
-from inspect import getmembers, isfunction
 import sys
 sys.path.append('../utils')
 import utils.utils as ut
@@ -38,6 +37,6 @@ def pruning_dfs(problem_input):
     return {
         "success": True,
         "best_string": min_string,
-        "best_score": min_hamming
+        "best_score": min_hamming,
+        "pruned": pruned
         }
-
