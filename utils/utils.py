@@ -27,30 +27,6 @@ def get_alphabet_all(strings):
         alphabet = alphabet.union(get_alphabet(s))
     return alphabet
 
-def parse_problem(input_strings):
-    input_strings = list(set(input_strings))
-    n = len(input_strings)    
-    if n == 0:
-        raise ValueError('The list has 0 elements.')
-    m = len(input_strings[0])
-    if not all(len(s) == m for s in input_strings):
-        raise ValueError('Expecting strings of equal lengths.')
-    
-    alphabet = list(get_alphabet_all(input_strings))
-    
-    return {'n': n, 'm': m, 'strings': input_strings, 'alphabet': alphabet}
-
-def read_from_file(filepath):
-    f = open(filepath, 'r')
-    lines = f.read().splitlines()
-    return parse_problem(lines)
-
-def print_problem(problem_input):
-    print('>> Nearest String problem for: ')
-    print(f"\t{problem_input['n']} strings of length {problem_input['m']}")
-    print(f"\tOver finite alphabet: {problem_input['alphabet']}")
-    print(f"\tStrings: ")
-    print("\t" + "\n\t".join(problem_input['strings']))
 
 
 

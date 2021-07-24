@@ -75,6 +75,7 @@ class CSSolution:
 
 
 
+# TODO: Refactor config
 class AbstractSolver:
     def __init__(self, **kwargs) -> None:
         if 'config' in kwargs:
