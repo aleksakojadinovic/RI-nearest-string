@@ -10,6 +10,9 @@ class BruteForceSolver(AbstractSolver):
     def default_config(self) -> dict:
         return dict()
 
+    def name(self) -> str:
+        return 'Brute Force DFS Solver'
+
     def solve(self, problem: CSProblem) -> CSSolution:
         m = problem.m
         alphabet = problem.alphabet

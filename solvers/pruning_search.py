@@ -10,6 +10,9 @@ class PruningSolver(AbstractSolver):
     def default_config(self) -> dict:
         return dict()
 
+    def name(self) -> str:
+        return 'DFS Solver with Pruning'
+
     def solve(self, problem: CSProblem) -> CSSolution:
         m = problem.m
         alphabet = problem.alphabet

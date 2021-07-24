@@ -83,6 +83,9 @@ class AbstractSolver:
         else:
             self.config = self.default_config()
     
+    def name(self) -> str:
+        raise NotImplementedError
+
     def default_config(self) -> dict:
         raise NotImplementedError
 
@@ -90,6 +93,9 @@ class AbstractSolver:
         if self.config is None:
             return self.default_config()
         return self.config
+
+    def edit_conf(self, k, v):
+        self.config[k] = v
 
     def read_config(filepath):
         raise NotImplementedError('TODO')

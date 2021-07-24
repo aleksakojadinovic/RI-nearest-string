@@ -17,11 +17,14 @@ class GeneticSolver(AbstractSolver):
         super().__init__(**kwargs)
     
     def default_config(self) -> dict:
-        return {'POP_SIZE': 1000,
-                'MAX_ITERS': 100,
+        return {'POP_SIZE': 100,
+                'MAX_ITERS': 50,
                 'TOUR_SIZE': 10,
                 'REPR_SIZE': 300,
                 'MUT': 0.05}
+
+    def name(self) -> str:
+        return 'Genetic algorithm solver'
 
     def init_pop(self, pop_size, alphabet, length):
         return random_generator.random_strings(self.config['POP_SIZE'], alphabet, length)
@@ -85,13 +88,10 @@ class GeneticSolver(AbstractSolver):
         current_scores  = [ut.problem_metric(s, strings) for s in current_pop]
         best_unit, best_score = self.get_best(current_pop, current_scores)
 
-        # score_history = []
         for i in range(self.config['MAX_ITERS']):
             for_reproduction = self.perform_selection(current_pop, current_scores)
             new_pop, new_pop_score = self.reproduce(for_reproduction, strings, alphabet)
             curr_best, curr_best_score = self.get_best(new_pop, new_pop_score)
-            # score_history.append(curr_best_score)
-            # print(f'Iter: {i}/{MAX_ITERS}, score: {curr_best_score}', end='\r')
             if curr_best_score < best_score:
                 best_unit = curr_best
                 best_score = curr_best_score

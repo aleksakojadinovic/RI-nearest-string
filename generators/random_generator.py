@@ -1,9 +1,13 @@
 import sys
-sys.path.append('../utils')
+sys.path.append('../')
 import utils.utils as ut
 import random
 import string
 import time
+
+from solvers.abstractions import CSProblem
+
+
 
 def random_alphabet(length):
     alph = set()
@@ -36,7 +40,17 @@ def random_problem(n, alphabet_length, string_length):
 def random_problems_over_alph_size(max_alphabet_size, n, string_length):
     return [random_problem(n, i, string_length) for i in range(1, max_alphabet_size + 1)]
 
+def random_problems_over_string_size(alphabet, n, min_string_size, max_string_size):
+    ps = []
+    for m in range(min_string_size, max_string_size + 1):
+        strs = random_strings(n, alphabet, m)
+        p = CSProblem(m, n, strs, alphabet)
+        ps.append(p)
 
+    return ps
+
+
+    
 
 
 
