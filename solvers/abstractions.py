@@ -48,7 +48,7 @@ class CSSolution:
     def __init__(self, solution: str, measure: int, extra:any = None) -> None:
         self.solution = solution
         self.measure = measure
-        self.extra = extra
+        self.extra = extra if extra is not None else dict()
 
     def solution(self) -> str:
         return self.solution
@@ -80,7 +80,7 @@ class AbstractSolver:
         if 'config' in kwargs:
             self.config = kwargs['config']
         else:
-            self.config = None
+            self.config = self.default_config()
     
     def default_config(self) -> dict:
         raise NotImplementedError
