@@ -81,17 +81,20 @@ def genetic_solver(problem_input):
     current_pop     = init_pop(POP_SIZE, alphabet, n)
     current_scores  = [ut.problem_metric(s, strings) for s in current_pop]
     best_unit, best_score = get_best(current_pop, current_scores)
+
+    score_history = []
     for i in range(MAX_ITERS):
-        print(f'Iter: {i}/{MAX_ITERS}', end='\r')
         for_reproduction = perform_selection(current_pop, current_scores)
         new_pop, new_pop_score = reproduce(for_reproduction, strings, alphabet)
         curr_best, curr_best_score = get_best(new_pop, new_pop_score)
-
+        score_history.append(curr_best_score)
+        print(f'Iter: {i}/{MAX_ITERS}, score: {curr_best_score}', end='\r')
         if curr_best_score < best_score:
             best_unit = curr_best
             best_score = curr_best_score
 
     print(f'Best string: {best_unit} with score {best_score}')
+    print(score_history)
 
 
     
