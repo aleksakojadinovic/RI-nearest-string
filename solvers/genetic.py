@@ -78,7 +78,7 @@ class GeneticSolver(AbstractSolver):
 
         return new_gen, new_gen_scores
 
-    def solve(self, problem: CSProblem) -> CSSolution:
+    def solve_(self, problem: CSProblem) -> CSSolution:
         m = problem.m
         alphabet = problem.alphabet
         strings = problem.strings

@@ -13,7 +13,7 @@ class PruningSolver(AbstractSolver):
     def name(self) -> str:
         return 'DFS Solver with Pruning'
 
-    def solve(self, problem: CSProblem) -> CSSolution:
+    def solve_(self, problem: CSProblem) -> CSSolution:
         m = problem.m
         alphabet = problem.alphabet
         strings = problem.strings

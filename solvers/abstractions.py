@@ -50,15 +50,6 @@ class CSSolution:
         self.measure = measure
         self.extra = extra if extra is not None else dict()
 
-    def solution(self) -> str:
-        return self.solution
-
-    def measure(self) -> str:
-        return self.measure
-
-    def extra(self) -> any:
-        return self.extra
-
     def as_dict(self) -> dict[str, int]:
         return {'solution': self.solution, 'measure': self.measure, 'extra': self.extra}
 
@@ -73,11 +64,17 @@ class CSSolution:
 
         return '\r\n'.join(lines)
 
+    def __eq__(self, o: object) -> bool:
+        if not isinstance(o, CSSolution):
+            return False
+        return self.measure == o.measure
+
 
 
 # TODO: Refactor config
 class AbstractSolver:
     def __init__(self, **kwargs) -> None:
+        self.expected_solution = None
         if 'config' in kwargs:
             self.config = kwargs['config']
         else:
@@ -96,12 +93,25 @@ class AbstractSolver:
 
     def edit_conf(self, k, v):
         self.config[k] = v
+        return self
 
     def read_config(filepath):
         raise NotImplementedError('TODO')
 
-    def solve(self, problem: CSProblem) -> CSSolution:
+    def solve_(self, problem: CSProblem) -> CSSolution:
         raise NotImplementedError
+
+    def solve(self, problem: CSProblem) -> dict:
+        sol = self.solve_(problem)
+        if self.expected_solution is not None:
+            sol.extra['is_expected'] = sol == self.expected_solution
+            sol.extra['expected'] = self.expected_solution.measure
+
+        return sol
+
+    def expect(self, solution: CSSolution) -> None:
+        self.expected_solution = solution
+        return self
 
     def run_and_time(self, problem: CSProblem) -> dict:
         start_time = time.time()

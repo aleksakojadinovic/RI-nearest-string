@@ -1,30 +1,38 @@
-def replace_char(s, idx, c):
-    return s[:idx] + c + s[idx + 1:]
-
 class StringIterator:
+    @staticmethod
+    def repeat(c, n):
+        return ''.join(c for _ in range(n))
+
+    @staticmethod
+    def replace_char(s, idx, c):
+        return s[:idx] + c + s[idx + 1:]
+
+    def alphabet_index(self, c):
+        return self.alphabet.index(c)
+
+    def push_and_kill(self, s):
+        curr_char_idx = len(s) - 1
+        last_char = self.alphabet[-1]
+        while curr_char_idx >= 0 and s[curr_char_idx] == last_char:
+            curr_char_idx -= 1
+        if curr_char_idx < 0:
+            return None
+
+        next_alphabet_letter = self.alphabet[self.alphabet_index(s[curr_char_idx]) + 1]
+        return s[:curr_char_idx] + next_alphabet_letter + StringIterator.repeat(self.alphabet[0], self.length - curr_char_idx - 1)
+        
     def __init__(self, alphabet, length):
         self.alphabet = list(alphabet)
         self.length = length
-        self.current_string = ''.join(self.alphabet[0] for _ in range(self.length))
-        self.curr_character_index = self.length - 1
-        self.curr_alphabet_index = 0
-        self.stop = False
+        self.current_string = StringIterator.repeat(self.alphabet[0], self.length)
 
     def __next__(self):
-        if self.stop:
+        if self.current_string is None:
             raise StopIteration
 
         ret = self.current_string
+        self.current_string = self.push_and_kill(self.current_string)
 
-        self.curr_alphabet_index += 1
-        if self.curr_alphabet_index == len(self.alphabet):
-            self.curr_alphabet_index = 0
-            self.curr_character_index -= 1
-        
-        if self.curr_character_index < 0:
-            self.stop = True
-
-        self.current_string = replace_char(self.current_string, self.curr_character_index, self.alphabet[self.curr_alphabet_index])
         return ret
 
 class StringGenerator:

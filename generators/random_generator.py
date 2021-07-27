@@ -49,6 +49,16 @@ def random_problems_over_string_size(alphabet, n, min_string_size, max_string_si
 
     return ps
 
+def random_problems_over_num_of_strings(alphabet, m, min_num_strings, max_num_strings):
+    ps = []
+    for n in range(min_num_strings, max_num_strings + 1):
+        strs = random_strings(n, alphabet, m)
+        p = CSProblem(m, n, strs, alphabet)
+        ps.append(p)
+    
+    return ps
+
+
 
     
 
