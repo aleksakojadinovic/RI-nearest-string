@@ -12,9 +12,9 @@ from generators import random_generator
 import matplotlib.pyplot as plt
 
 if __name__ == '__main__':
-    # input_file = 'examples/ex1.txt'
-    # problem = CSProblem.from_file(input_file)
-    # print(problem)
+    input_file = 'examples/ex1.txt'
+    problem = CSProblem.from_file(input_file)
+    print(problem)
 
 
     # brute_force_solver = BruteForceSolver()
@@ -28,19 +28,27 @@ if __name__ == '__main__':
     # print(timed_solution['solution'])
     # print(timed_solution['elapsed'])
 
-    # solver1 = PruningSolver()
-    # solver2 = GeneticSolver()
-    # solver3 = GeneticSolver()
-    # solver3.edit_conf('POP_SIZE', 100)
+    solver1 = PruningSolver()
+    reference_solution = solver1.solve(problem)
+    print(reference_solution)
+
+    solver2 = GeneticSolver()
+    solver2.expect(reference_solution)
+    solver3 = GeneticSolver()
+    solver3.expect(reference_solution)
+    solver3.edit_conf('POP_SIZE', 100)
+
+    print(solver2.solve(problem))
+    print(solver3.solve(problem))
 
     # alphabet = random_generator.random_alphabet(5)
-    # # num_strings = 20
-    # # min_str_size = 3
-    # # max_str_size = 10
+    # num_strings = 20
+    # min_str_size = 3
+    # max_str_size = 10
 
-    # # problems = random_generator.random_problems_over_string_size(alphabet, num_strings,  min_str_size, max_str_size)
-    # # stats.compare.compare_on_range_of_problems([solver1, solver2, solver3], problems, list(range(min_str_size, 1 + max_str_size)), 'String size (m)')
-    # # plt.show()
+    # problems = random_generator.random_problems_over_string_size(alphabet, num_strings,  min_str_size, max_str_size)
+    # stats.compare.compare_on_range_of_problems([solver1, solver2, solver3], problems, list(range(min_str_size, 1 + max_str_size)), 'String size (m)')
+    # plt.show()
 
     # string_length = 10
     # min_num_strs = 4
@@ -50,14 +58,14 @@ if __name__ == '__main__':
 
     # plt.show()
     
-    alphabet = ['a', 'b', 'c', 'd', 'e']
-    a = len(alphabet)
-    length = 6
+    # alphabet = ['a', 'b', 'c', 'd', 'e']
+    # a = len(alphabet)
+    # length = 6
 
-    all_strs = list(StringGenerator(alphabet, length))
-    expected = a ** length
+    # all_strs = list(StringGenerator(alphabet, length))
+    # expected = a ** length
 
-    print(f'my: {len(all_strs)} ex: {expected}, good: {len(all_strs) == expected}')
+    # print(f'my: {len(all_strs)} ex: {expected}, good: {len(all_strs) == expected}')
 
 
     
@@ -73,4 +81,5 @@ if __name__ == '__main__':
 
 
      
+
 
