@@ -75,6 +75,7 @@ class CSSolution:
 class AbstractSolver:
     def __init__(self, **kwargs) -> None:
         self.expected_solution = None
+        self.wrong_flag = None
         if 'config' in kwargs:
             self.config = kwargs['config']
         else:
@@ -106,7 +107,7 @@ class AbstractSolver:
         if self.expected_solution is not None:
             sol.extra['is_expected'] = sol == self.expected_solution
             sol.extra['expected'] = self.expected_solution.measure
-
+            self.wrong_flag = not sol.extra['is_expected']
         return sol
 
     def expect(self, solution: CSSolution) -> None:

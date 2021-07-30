@@ -19,11 +19,15 @@ def compare_on_single_problem(solvers: List[AbstractSolver], problem: CSProblem,
         results.append(s.run_and_time(problem))
     times = [r['elapsed'] for r in results]
     names = [s.name() for s in solvers]
+    colors = ['gray' if s.wrong_flag is None else ('blue' if not s.wrong_flag else 'red') for s in solvers]
+    print(colors)
 
-    ax.bar(range(len(solvers)), times, align='center')
+    ax.bar(range(len(solvers)), times, align='center', color=colors)
     ax.xticks(range(len(solvers)), names)
     ax.ylabel('Time (seconds)')
     ax.title('Comparing different solvers')
+
+    return results
 
 
 def compare_on_range_of_problems(solvers: List[AbstractSolver], problems: List[CSProblem], target_var_range: List, target_var_name: str, ax = None):

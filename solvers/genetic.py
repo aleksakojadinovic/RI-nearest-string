@@ -5,12 +5,7 @@ sys.path.append('../generators')
 import utils.utils as ut
 from generators import random_generator
 from .abstractions import *
-
-POP_SIZE    = 1000
-MAX_ITERS   = 100
-TOUR_SIZE   = 10
-REPR_SIZE   = 300
-MUT         = 0.05
+from tqdm import tqdm
 
 class GeneticSolver(AbstractSolver):
     def __init__(self, **kwargs) -> None:
@@ -55,7 +50,7 @@ class GeneticSolver(AbstractSolver):
     
     def mutate(self, s, alphabet):
         random_value = random.random()
-        if random_value < MUT:
+        if random_value < self.config['MUT']:
             random_index = random.randrange(len(s))
             while True:
                 new_value = random.choice(alphabet)
@@ -67,7 +62,7 @@ class GeneticSolver(AbstractSolver):
     def reproduce(self, for_reproduction, strings, alphabet):
         new_gen = []
         new_gen_scores = []
-        while len(new_gen) != POP_SIZE:
+        while len(new_gen) != self.config['POP_SIZE']:
             [(parent1, _), (parent2, _)] = random.sample(for_reproduction, 2)
             new_string = self.crossover(parent1, parent2)
             new_string = self.mutate(new_string, alphabet)
@@ -88,7 +83,7 @@ class GeneticSolver(AbstractSolver):
         current_scores  = [ut.problem_metric(s, strings) for s in current_pop]
         best_unit, best_score = self.get_best(current_pop, current_scores)
 
-        for i in range(self.config['MAX_ITERS']):
+        for i in tqdm(range(self.config['MAX_ITERS'])):
             for_reproduction = self.perform_selection(current_pop, current_scores)
             new_pop, new_pop_score = self.reproduce(for_reproduction, strings, alphabet)
             curr_best, curr_best_score = self.get_best(new_pop, new_pop_score)

@@ -14,10 +14,30 @@ if __name__ == '__main__':
     input_file = 'examples/ex2.txt'
     problem = CSProblem.from_file(input_file)
     print(problem)
-
     reference_solution = CSSolution('', 2)
 
-    analyze.compare_on_single_problem([PruningSolver().expect(reference_solution), GeneticSolver().expect(reference_solution), StringSearchSolver().expect(reference_solution)], problem)
+    solvers = [ PruningSolver()
+                               .expect(reference_solution)
+                               ,
+                GeneticSolver()
+                               .edit_conf('MAX_ITERS', 5000)
+                               .edit_conf('MUT', 0.30)
+                               .edit_conf('POP_SIZE', 500)
+                               .expect(reference_solution)
+                               ,
+                StringSearchSolver()
+                               .expect(reference_solution)
+                               ]
+    results = analyze.compare_on_single_problem(solvers, problem)
+    for s, r in zip(solvers, results):
+        print(f'{s.name()}')        
+        print(f'\t time: {r["elapsed"]} s')
+        print(f'\t measure: {r["solution"].measure}')
+        if s.wrong_flag is None:
+            print(f'\t correct: unknown')
+        else:
+            print(f'\t correct: {not s.wrong_flag}')
+    plt.show()
 
     
 
