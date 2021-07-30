@@ -13,13 +13,10 @@ def compare_on_single_problem(solvers: List[AbstractSolver], problem: CSProblem,
     if ax is None:
         ax = plt
     
-    solver_times = []
+    results = []
     for s in solvers:
-        result = s.run_and_time(problem)
-        solver_times.append(result['elapsed'])
-
-    results = (s.run_and_time(problem) for s in solvers)
-
+        print(f'Running solver: {s.name()}')
+        results.append(s.run_and_time(problem))
     times = [r['elapsed'] for r in results]
     names = [s.name() for s in solvers]
 

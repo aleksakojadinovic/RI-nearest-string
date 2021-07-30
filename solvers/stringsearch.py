@@ -1,9 +1,11 @@
-import sys
-from typing import List
-sys.path.append('../')
-import utils.utils as ut
-from generators.string_generator import StringGenerator
 import math
+import sys
+sys.path.append('../utils')
+sys.path.append('../generators')
+import utils.utils as ut
+from .abstractions import *
+from generators.string_generator import StringGenerator
+from tqdm import tqdm
 
 class ystr(str):
     def __or__(self, index_list):
@@ -18,8 +20,6 @@ class ystr(str):
 
     def same_idx(self, other):
         return [i for i, (c1, c2) in enumerate(zip(self, other)) if c1 == c2]
-
-    
 
 def string_search_solver(strings, ds, alphabet):
     m = len(strings[0])
@@ -40,22 +40,48 @@ def string_search_solver_(strings: List[ystr], ds: List[int], alphabet: List[str
         return s0
 
     si0 = strings[i0]
-    Q = s0.diff_idx(si0)
-    P = [j for j in list(range(0, len(s0))) if j not in Q]
+    Q = s0.same_idx(si0)
+    P = s0.diff_idx(si0)
+    # P = [j for j in list(range(0, len(s0))) if j not in Q]
 
     for t in map(ystr, StringGenerator(alphabet, len(P))):
         if ut.hamming_distance(t, s0 | P) <= ds[0] and ut.hamming_distance(t, si0 | P) <= ds[i0]:
             e1 = min(ds[0] - ut.hamming_distance(t, s0 | P), math.ceil(ds[0] / 2))
             es = [e1] + [ds[i] - ut.hamming_distance(t, strings[i] | P) for i in range(1, len(strings))]
-            u = string_search_solver_([s | Q for s in strings], es, alphabet)
+            u = string_search_solver_([s | Q for s in strings], es, alphabet, len(Q), n)
             if u is not None:
                 final_str = ''
                 for i in range(m):
                     if i in P:
-                        final_str += t[i]
+                        final_str += t[P.index(i)]
                     else:
-                        final_str += u[i]
+                        final_str += u[Q.index(i)]
                 return final_str
     return None
-    
-    
+
+class StringSearchSolver(AbstractSolver):
+    def __init__(self, **kwargs) -> None:
+        super().__init__(**kwargs)
+
+    def default_config(self) -> dict:
+        return {}
+
+    def name(self) -> str:
+        return 'String search solver'
+   
+    def d_string_search(self, problem: CSProblem, d: int):
+        return string_search_solver(problem.strings, [d for _ in range(problem.n)], problem.alphabet)
+
+    def optimize_string_search(self, problem: CSProblem):
+        for best_dist in range(problem.m + 1):
+            sol = self.d_string_search(problem, best_dist)
+            if sol is not None:
+                score = ut.problem_metric(sol, problem.strings)
+                return sol, score
+        return None, None
+
+    def solve_(self, problem: CSProblem) -> CSSolution:
+        sol, score = self.optimize_string_search(problem)
+        if sol is None:
+            raise ValueError(f'Nesto ne valja u algoritmu :D')
+        return CSSolution(sol, score)

@@ -32,7 +32,6 @@ class StringIterator:
 
         ret = self.current_string
         self.current_string = self.push_and_kill(self.current_string)
-
         return ret
 
 class StringGenerator:
