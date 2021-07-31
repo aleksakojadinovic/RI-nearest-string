@@ -37,7 +37,7 @@ def compare_on_range_of_problems(solvers: List[AbstractSolver], problems: List[C
         print(f'Target var range must have the same number of elements as problems')
     solvers_times = []
     for solver in solvers:
-        print(f'Solver {solver.name()}')
+        print(f'Running "{solver.name()}"')
         this_solver_times = []
         for problem in tqdm(problems):
             res = solver.run_and_time(problem)

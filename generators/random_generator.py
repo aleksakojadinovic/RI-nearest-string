@@ -30,12 +30,7 @@ def random_strings(n, alphabet, length):
 def random_problem(n, alphabet_length, string_length):
     a = random_alphabet(alphabet_length)
     strings = random_strings(n, a, string_length)
-    return {
-        'n': n,
-        'm': string_length,
-        'strings': strings,
-        'alphabet': a
-    }
+    return CSProblem(string_length, n, strings, a)
 
 def random_problems_over_alph_size(max_alphabet_size, n, string_length):
     return [random_problem(n, i, string_length) for i in range(1, max_alphabet_size + 1)]

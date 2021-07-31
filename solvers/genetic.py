@@ -83,7 +83,7 @@ class GeneticSolver(AbstractSolver):
         current_scores  = [ut.problem_metric(s, strings) for s in current_pop]
         best_unit, best_score = self.get_best(current_pop, current_scores)
 
-        for i in tqdm(range(self.config['MAX_ITERS'])):
+        for i in range(self.config['MAX_ITERS']):
             for_reproduction = self.perform_selection(current_pop, current_scores)
             new_pop, new_pop_score = self.reproduce(for_reproduction, strings, alphabet)
             curr_best, curr_best_score = self.get_best(new_pop, new_pop_score)
