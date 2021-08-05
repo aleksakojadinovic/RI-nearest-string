@@ -4,8 +4,6 @@ def hamming_distance(s1, s2):
 def hamming_distance_is(s1, s2, P):
     return sum(s1[i] != s2[i] for i in P)
 
-
-
 def problem_metric(string, references):
     return max(hamming_distance(string, r) for r in references)
 

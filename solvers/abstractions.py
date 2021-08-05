@@ -8,7 +8,7 @@ from utils.utils import get_alphabet_all
 class CSProblem:
     @staticmethod 
     def from_dict(d):
-        return CSProblem(d['m'], d['n'], d['strings'], d['alphabet'])
+        return CSProblem(d['m'], d['n'], d['strings'], d['alphabet'], d['expect'])
     
     @staticmethod
     def from_file(filepath):
@@ -19,17 +19,51 @@ class CSProblem:
         lines = list(lines)
         if not lines:
             raise ValueError(f'Empty file.')
-        n = len(lines)
-        m = len(lines[0])
-        alphabet = list(get_alphabet_all(lines))
+        n = 0
+        try:
+            n = int(lines[0])
+        except ValueError:
+            raise ValueError(f'Expected number of strings in the first line, got {lines[0]}')
+        # Now we need either n more lines of n + 1 more lines
+        # if there are n lines then they're all strings
+        expected_solution = None
 
-        return CSProblem(m, n, lines, alphabet)
+        if len(lines) == n + 1:
+            string_entries = lines[1:]
+        elif len(lines) == n + 2:
+            if lines[-1].lower().startswith('expect'):
+                expect_entry = lines[-1].split(" ")
+            else:
+                raise ValueError(f'Unknown command: {lines[-1]} (maybe number of strings is wrong?)')
+            if len(expect_entry) != 2:
+                raise ValueError(f'Invalid expect syntax, should be "expect SOLUTION"!')
+            d_str = expect_entry[1]
+            d_num = 0
+            try:
+                d_num = int(d_str)
+            except ValueError:
+                raise ValueError('Non-integer in expect syntax!')
 
-    def __init__(self, m: int, n: int, strings: List[str], alphabet: List[str]) -> None:
+            if d_num < 0:
+                raise ValueError(f'Expected value cannot be negative!')
+            
+            expected_solution = d_num
+
+            string_entries = lines[1:][:-1]
+
+        m = len(string_entries[0])
+        if not all(len(s) == m for s in string_entries):
+            raise ValueError(f'Strings need to be of same size!')
+        alphabet = list(get_alphabet_all(string_entries))
+
+        return CSProblem(m, n, string_entries, alphabet, expect=expected_solution)
+
+    def __init__(self, m: int, n: int, strings: List[str], alphabet: List[str], expect: int = None) -> None:
         self.m = m
         self.n = n
         self.strings = strings
         self.alphabet = alphabet
+        self.expect = expect
 
     def __str__(self) -> str:
         lines = []
@@ -39,19 +73,29 @@ class CSProblem:
         lines.append(f'\tagainst strings:')
         for i, s in enumerate(self.strings):
             lines.append(f'\t\t{i+1}: {s}')
+        if self.expect is not None:
+            lines.append(f'\tExpecting solution: {self.expect}')
         return '\r\n'.join(lines)
 
 
         
 
 class CSSolution:
-    def __init__(self, solution: str, measure: int, extra:any = None) -> None:
+    def __init__(self, solution: str, measure: int, extra:any = None, problem:CSProblem = None) -> None:
         self.solution = solution
         self.measure = measure
         self.extra = extra if extra is not None else dict()
+        self.problem = problem
+        if problem is None or problem.expect is None:
+            self.correct = None
+        else:
+            self.correct = self.measure == problem.expect
 
     def as_dict(self) -> dict[str, int]:
-        return {'solution': self.solution, 'measure': self.measure, 'extra': self.extra}
+        return {'solution': self.solution, 'measure': self.measure, 'extra': self.extra, 'correct': self.correct}
+
+    def compare_with_ref_(self, expected_value):
+        self.correct = expected_value == self.measure
 
     def __str__(self) -> str:
         lines = []
@@ -61,6 +105,7 @@ class CSSolution:
         lines.append('\tExtra:')
         for e in self.extra:
             lines.append(f'\t\t{e}: {self.extra[e]}')
+        lines.append(f'Correct: {self.correct if self.correct is not None else "Unknown"}')
 
         return '\r\n'.join(lines)
 
@@ -74,8 +119,6 @@ class CSSolution:
 # TODO: Refactor config
 class AbstractSolver:
     def __init__(self, **kwargs) -> None:
-        self.expected_solution = None
-        self.wrong_flag = None
         if 'config' in kwargs:
             self.config = kwargs['config']
         else:
@@ -88,8 +131,6 @@ class AbstractSolver:
         raise NotImplementedError
 
     def config(self) -> dict:
-        if self.config is None:
-            return self.default_config()
         return self.config
 
     def edit_conf(self, k, v):
@@ -104,15 +145,9 @@ class AbstractSolver:
 
     def solve(self, problem: CSProblem) -> dict:
         sol = self.solve_(problem)
-        if self.expected_solution is not None:
-            sol.extra['is_expected'] = sol == self.expected_solution
-            sol.extra['expected'] = self.expected_solution.measure
-            self.wrong_flag = not sol.extra['is_expected']
+        if problem.expect is not None:
+            sol.compare_with_ref_(problem.expect)
         return sol
-
-    def expect(self, solution: CSSolution) -> None:
-        self.expected_solution = solution
-        return self
 
     def run_and_time(self, problem: CSProblem) -> dict:
         start_time = time.time()

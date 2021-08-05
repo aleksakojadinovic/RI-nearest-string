@@ -1,3 +1,5 @@
+# 8 strings
+8
 abxyzpab
 acxyzqab
 adxyzrab
@@ -6,3 +8,5 @@ acxyzsab
 abxyzsac
 adxyzsac
 acxyztac
+# expecting 2
+expect 2
