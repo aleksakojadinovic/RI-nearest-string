@@ -1,1 +1,0 @@
-# RI-nearest-string
