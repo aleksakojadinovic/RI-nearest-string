@@ -1,23 +1,8 @@
 import math
 from typing import List
-import utils as ut
+from utils import ystr, hamming_distance, problem_metric
 from abstractions import AbstractSolver, CSProblem, CSSolution
 from generators.string_generator import StringGenerator
-
-
-class ystr(str):
-    def __or__(self, index_list):
-        return ystr(''.join(c for i, c in enumerate(str(self)) if i in index_list))
-
-    def set_char(self, index, char):
-        s = str(self)
-        return ystr(s[:index] + char + s[index + 1:])
-
-    def diff_idx(self, other):
-        return [i for i, (c1, c2) in enumerate(zip(self, other)) if c1 != c2]
-
-    def same_idx(self, other):
-        return [i for i, (c1, c2) in enumerate(zip(self, other)) if c1 == c2]
 
 
 def string_search_solver(strings, ds, alphabet):
@@ -32,7 +17,7 @@ def string_search_solver_(strings: List[ystr], ds: List[int], alphabet: List[str
     i0 = None
     for i in range(n):
         curr_str = strings[i]
-        if ut.hamming_distance(s0, curr_str) > ds[i]:
+        if hamming_distance(s0, curr_str) > ds[i]:
             i0 = i
             break
 
@@ -45,9 +30,9 @@ def string_search_solver_(strings: List[ystr], ds: List[int], alphabet: List[str
     # P = [j for j in list(range(0, len(s0))) if j not in Q]
 
     for t in map(ystr, StringGenerator(alphabet, len(P))):
-        if ut.hamming_distance(t, s0 | P) <= ds[0] and ut.hamming_distance(t, si0 | P) <= ds[i0]:
-            e1 = min(ds[0] - ut.hamming_distance(t, s0 | P), math.ceil(ds[0] / 2))
-            es = [e1] + [ds[i] - ut.hamming_distance(t, strings[i] | P) for i in range(1, len(strings))]
+        if hamming_distance(t, s0 | P) <= ds[0] and hamming_distance(t, si0 | P) <= ds[i0]:
+            e1 = min(ds[0] - hamming_distance(t, s0 | P), math.ceil(ds[0] / 2))
+            es = [e1] + [ds[i] - hamming_distance(t, strings[i] | P) for i in range(1, len(strings))]
             u = string_search_solver_([s | Q for s in strings], es, alphabet, len(Q), n)
             if u is not None:
                 final_str = ''
@@ -68,7 +53,7 @@ def optimize_string_search(problem: CSProblem):
     for best_dist in range(problem.m + 1):
         sol = d_string_search(problem, best_dist)
         if sol is not None:
-            score = ut.problem_metric(sol, problem.strings)
+            score = problem_metric(sol, problem.strings)
             return sol, score
     return None, None
 

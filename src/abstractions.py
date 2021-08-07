@@ -47,7 +47,8 @@ class CSProblem:
 
             expected_solution = d_num
             string_entries = lines[1:][:-1]
-
+        else:
+            raise ValueError(f'Unexpected number of lines')
 
         m = len(string_entries[0])
         if not all(len(s) == m for s in string_entries):

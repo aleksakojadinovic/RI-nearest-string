@@ -1,3 +1,17 @@
+class ystr(str):
+    def __or__(self, index_list):
+        return ystr(''.join(c for i, c in enumerate(str(self)) if i in index_list))
+
+    def set_char(self, index, char):
+        s = str(self)
+        return ystr(s[:index] + char + s[index + 1:])
+
+    def diff_idx(self, other):
+        return [i for i, (c1, c2) in enumerate(zip(self, other)) if c1 != c2]
+
+    def same_idx(self, other):
+        return [i for i, (c1, c2) in enumerate(zip(self, other)) if c1 == c2]
+
 def hamming_distance(s1, s2):
     return sum(c1 != c2 for c1, c2 in zip(s1, s2))
 
