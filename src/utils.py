@@ -21,6 +21,16 @@ def hamming_distance_is(s1, s2, P):
 def problem_metric(string, references):
     return max(hamming_distance(string, r) for r in references)
 
+def problem_metric2(string, references):
+    mmet = 0
+    l = len(references[0])
+    for r in references:
+        ch = hamming_distance(string, r)
+        if ch == l:
+            return ch
+        mmet = max(mmet, ch)
+    return mmet
+
 # Returns the alphabet for a given string
 def get_alphabet(s):
     return set(list(s))

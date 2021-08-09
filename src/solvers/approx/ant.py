@@ -1,6 +1,9 @@
 import random
+import time
+
 import numpy as np
 import pandas as pd
+from tqdm import tqdm
 
 import utils
 from abstractions import AbstractSolver, CSProblem, CSSolution
@@ -36,43 +39,51 @@ class AntColonySolver(AbstractSolver):
         return {
             'MAX_ITERS': 1000,
             'COLONY_SIZE': 100,
-            'EVAPORATION_COEFF': 0.5,
-            'RHO': 0.3
+            'RHO': 0.1
         }
 
 
     def solve_(self, problem: CSProblem) -> CSSolution:
         m, n, alphabet, strings = problem.m, problem.n, problem.alphabet, problem.strings
         A = len(alphabet)
-        world_trails = np.full((A, m), 1/A)
+        rho = self.config['RHO']
+        colony_size = self.config['COLONY_SIZE']
+
+
 
         global_best_ant = None
-        global_best_metric = float('inf')
+        global_best_metric = m
+
+        INNER_TIME_SUM_ = 0
+        INNER_TIME_COUNTER_ = 0
+
+        ants = np.full((colony_size, m), '')
+        world_trails = np.full((m, A), 1 / A)
+
+
 
         for iteration in range(self.config['MAX_ITERS']):
             local_best_ant = None
-            local_best_metric = float('inf')
-            for _ in range(self.config['COLONY_SIZE']):
-                # We choose the first letter separately because it makes
-                # the loop easier (less ifs)
-                # We make the choice based on the first column pheromon levels
-                ant = random.choices(alphabet, weights=[world_trails[k][0] for k in range(A)], k=1)[0]
-                for next_character_index in range(1, m):
-                    ant += random.choices(alphabet, weights=world_trails[:, next_character_index], k=1)[0]
+            local_best_metric = m
+            for ant_idx in range(colony_size):
 
+                for next_character_index in range(m):
+                    ants[ant_idx][next_character_index] = random.choices(alphabet, weights=world_trails[next_character_index], k=1)[0]
 
+                ant_metric = utils.problem_metric(ants[ant_idx], strings)
 
-                ant_metric = utils.problem_metric(ant, strings)
                 if ant_metric < local_best_metric:
                     local_best_metric = ant_metric
-                    local_best_ant = ant
+                    local_best_ant = ants[ant_idx]
 
             # First we perform pheromone evaporation
-            world_trails = self.evap_function(world_trails)
+            for i in range(m):
+                for j in range(A):
+                    world_trails[i][j] = world_trails[i][j] * (1 - rho)
 
             # Now, using the elitist strategy, only the best ant is allowed to update his pheromone trails
-            best_ant_xs = (alphabet.index(a) for a in local_best_ant)
-            best_ant_ys = range(m)
+            best_ant_ys = (alphabet.index(a) for a in local_best_ant)
+            best_ant_xs = range(m)
 
             for x, y in zip(best_ant_xs, best_ant_ys):
                 world_trails[x][y] = world_trails[x][y] + (1 - local_best_metric / m)
@@ -81,7 +92,8 @@ class AntColonySolver(AbstractSolver):
                 global_best_metric = local_best_metric
                 global_best_ant = local_best_ant
 
-        return CSSolution(global_best_ant, global_best_metric)
+        print(f'counter: {INNER_TIME_COUNTER_}')
+        return CSSolution(''.join(global_best_ant), global_best_metric, extra={'INNER_TIME_SUM_': INNER_TIME_SUM_})
 
 
 

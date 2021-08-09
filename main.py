@@ -11,29 +11,17 @@ from stats.compare import compare_on_single_problem
 
 if __name__ == '__main__':
 
-    input_file = 'examples/example2.txt'
-    problem = CSProblem.from_file(input_file)
+    input_file = 'csps/2-10-250-1-0.csp'
+    problem = CSProblem.from_csp(input_file)
+
     print(problem)
-    print(AntColonySolver().solve(problem))
 
+    tsol = AntColonySolver().edit_conf('MAX_ITERS', 250).edit_conf('COLONY_SIZE', 10).run_and_time(problem)
 
-    # solvers = [PruningSolver(),
-    #            GeneticSolver()
-    #                .edit_conf('MAX_ITERS', 500)
-    #                .edit_conf('MUT', 0.30)
-    #                .edit_conf('POP_SIZE', 500),
-    #            StringSearchSolver()
-    #            ]
-    # results = compare_on_single_problem(solvers, problem)
-    # for s, r in zip(solvers, results):
-    #     print(f'{s.name()}')
-    #     print(f'\t time: {r["elapsed"]} s')
-    #     print(f'\t measure: {r["solution"].measure}')
-    #     if r['solution'].correct is None:
-    #         print(f'\t correct: unknown')
-    #     else:
-    #         print(f'\t correct: {r["solution"].correct}')
-    # plt.show()
+    print(f"Total time: {tsol['elapsed']}")
+    print(f"Inner time: {tsol['solution'].extra['INNER_TIME_SUM_']}")
+    print(tsol['solution'])
+
 
 
 

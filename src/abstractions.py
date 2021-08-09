@@ -10,6 +10,21 @@ class CSProblem:
         return CSProblem(d['m'], d['n'], d['strings'], d['alphabet'], d['expect'])
 
     @staticmethod
+    def from_csp(filepath):
+        f = open(filepath, 'r')
+        lines = f.read().splitlines()
+        lines = (l for l in lines if l)
+        lines = list(lines)
+
+        alphabet_size = int(lines[0])
+        n = int(lines[1])
+        m = int(lines[2])
+        alphabet = lines[3:3+alphabet_size]
+        strings = lines[3+alphabet_size:]
+
+        return CSProblem(m, n, strings, alphabet)
+
+    @staticmethod
     def from_file(filepath):
 
         f = open(filepath, 'r')
@@ -112,7 +127,6 @@ class CSSolution:
         return self.measure == o.measure
 
 
-# TODO: Refactor config
 class AbstractSolver:
     def __init__(self, **kwargs) -> None:
         if 'config' in kwargs:
@@ -144,8 +158,11 @@ class AbstractSolver:
 
     def run_and_time(self, problem: CSProblem) -> dict:
         start_time = time.time()
-        solution = self.solve(problem)
+        solution = self.solve_(problem)
         end_time = time.time()
+
+        if problem.expect is not None:
+            solution.compare_with_ref_(problem.expect)
 
         return {
             'solution': solution,
