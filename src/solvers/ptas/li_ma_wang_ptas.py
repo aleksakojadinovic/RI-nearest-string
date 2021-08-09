@@ -1,9 +1,7 @@
 import math
 import numpy as np
 from itertools import combinations
-
 import pandas as pd
-
 import utils
 from abstractions import AbstractSolver, CSProblem, CSSolution
 
@@ -105,6 +103,8 @@ class LiMaWangPTASSolver(AbstractSolver):
             final_lp_lhs = np.vstack((first_part_lp_lhs_extended, second_part_lp_lhs_extended))
             final_lp_rhs = np.append(first_part_lp_rhs_extended, second_part_lp_rhs_extended)
             lp_signs = ['=' for _ in range(len(P))] + ['<=' for _ in range(n)]
+
+
 
             print(f'LPl:')
             print(pd.DataFrame(final_lp_lhs))

@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 
 from abstractions import CSProblem
+from solvers.approx.ant import AntColonySolver
 from solvers.approx.genetic import GeneticSolver
 from solvers.exact.pruning_search import PruningSolver
 from solvers.exact.string_search import StringSearchSolver
@@ -12,7 +13,9 @@ if __name__ == '__main__':
 
     input_file = 'examples/example2.txt'
     problem = CSProblem.from_file(input_file)
-    LiMaWangPTASSolver().solve(problem)
+    print(problem)
+    print(AntColonySolver().solve(problem))
+
 
     # solvers = [PruningSolver(),
     #            GeneticSolver()

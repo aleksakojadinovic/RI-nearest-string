@@ -5,3 +5,4 @@ ccaxd
 abcxa
 cbacd
 abaax
+expect 2
