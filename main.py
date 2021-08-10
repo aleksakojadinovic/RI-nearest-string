@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from abstractions import CSProblem, CSPLoader
 from solvers.approx.ant import AntColonySolver
 from solvers.approx.genetic import GeneticSolver
+from solvers.approx.lui_genetic import LuiEtAlGeneticSolver
 from solvers.exact.pruning_search import PruningSolver
 from solvers.exact.string_search import StringSearchSolver
 from solvers.ptas.li_ma_wang_ptas import LiMaWangPTASSolver
@@ -40,11 +41,15 @@ if __name__ == '__main__':
     # profile = cProfile.Profile()
     # profile.enable()
 
-    print(AntColonySolver().run_and_time(problem)["elapsed"])
 
-    # profile.disable()
-    # profile.print_stats()
-    #
+
+    for s in [LuiEtAlGeneticSolver(), GeneticSolver()]:
+        tsol = s.run_and_time(problem)
+        print(f'{s.name()} :')
+        print(f'\t{tsol["elapsed"]}')
+        print(f'\t{tsol["solution"]}')
+
+
 
 
 
