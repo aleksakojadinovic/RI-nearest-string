@@ -1,5 +1,5 @@
 import time
-
+import os
 import utils as ut
 from typing import List
 
@@ -90,6 +90,49 @@ class CSProblem:
         if self.expect is not None:
             lines.append(f'\tExpecting solution: {self.expect}')
         return '\r\n'.join(lines)
+
+
+class CSPLoader:
+    def __init__(self, solution_file=None):
+        self.solutions = dict()
+        if solution_file is not None:
+            f = open(solution_file, 'r')
+            lines = f.read().splitlines()
+            lines = (l for l in lines if l)
+            lines = list(lines)[1:]
+            for line in lines:
+                # print(f'line: {line}')
+
+                first_sc_index = line.index(';')
+                if first_sc_index == -1:
+                    continue
+                second_sc_index = line[first_sc_index+1:].index(';')
+
+                if second_sc_index == -1:
+                    continue
+                second_sc_index += first_sc_index + 1
+
+                problem_name = line[:first_sc_index]
+                # print(f'problem name: {problem_name}')
+                # print(f'problem_sol_string: {line[first_sc_index+1:second_sc_index]}')
+                # print(f'first sc index: {first_sc_index}')
+                # print(f'second sc index: {second_sc_index}')
+                #
+                # print(f'indexing string {line} from {first_sc_index+1} to {second_sc_index} results in {line[first_sc_index+1:second_sc_index]}')
+
+                problem_solution = float(line[first_sc_index+1:second_sc_index])
+                self.solutions[problem_name] = problem_solution
+
+
+
+    def load_csp(self, filepath):
+        fname = os.path.basename(filepath)
+        problem = CSProblem.from_csp(filepath)
+        problem.expect = None if fname not in self.solutions else self.solutions[fname]
+        return problem
+
+
+
 
 
 class CSSolution:

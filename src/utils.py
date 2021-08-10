@@ -17,6 +17,7 @@ class ystr(str):
 def hamming_distance(s1, s2):
     return sum(c1 != c2 for c1, c2 in zip(s1, s2))
 
+
 def hamming_distance_is(s1, s2, P):
     return sum(s1[i] != s2[i] for i in P)
 

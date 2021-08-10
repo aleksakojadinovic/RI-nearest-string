@@ -1,19 +1,12 @@
 import random
-import time
-
-import numpy as np
-import pandas as pd
-from tqdm import tqdm
-
 import utils
 from abstractions import AbstractSolver, CSProblem, CSSolution
-
-
+from tqdm import tqdm
 
 class AntColonySolver(AbstractSolver):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.evap_function = np.vectorize(lambda x: (1-self.config['RHO'])*x)
+
 
     def name(self) -> str:
         return 'Ant Colony Solver'
@@ -35,23 +28,19 @@ class AntColonySolver(AbstractSolver):
         global_best_ant = None
         global_best_metric = m
 
-        ants = np.full((colony_size, m), '')
-        world_trails = np.full((m, A), 1 / A)
+        world_trails = [[1.0 / A for _ in range(A)] for _ in range(m)]
 
-
-
-        for iteration in range(self.config['MAX_ITERS']):
+        miters = self.config['MAX_ITERS']
+        for iteration in range(miters):
             local_best_ant = None
             local_best_metric = m
             for ant_idx in range(colony_size):
-                for next_character_index in range(m):
-                    ants[ant_idx][next_character_index] = random.choices(alphabet, weights=world_trails[next_character_index], k=1)[0]
-
-                ant_metric = utils.problem_metric2(ants[ant_idx], strings)
+                ant = ''.join(random.choices(alphabet, weights=world_trails[next_character_index], k=1)[0] for next_character_index in range(m))
+                ant_metric = utils.problem_metric(ant, strings)
 
                 if ant_metric < local_best_metric:
                     local_best_metric = ant_metric
-                    local_best_ant = ants[ant_idx]
+                    local_best_ant = ant
 
             # First we perform pheromone evaporation
             for i in range(m):
@@ -68,7 +57,6 @@ class AntColonySolver(AbstractSolver):
             if local_best_metric < global_best_metric:
                 global_best_metric = local_best_metric
                 global_best_ant = local_best_ant
-
         return CSSolution(''.join(global_best_ant), global_best_metric)
 
 
