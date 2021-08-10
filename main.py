@@ -9,6 +9,7 @@ from solvers.ptas.li_ma_wang_ptas import LiMaWangPTASSolver
 from stats.compare import compare_on_single_problem
 
 import pandas as pd
+import cProfile
 
 if __name__ == '__main__':
     sols_path = 'results_csp_rnd.csv'
@@ -23,24 +24,24 @@ if __name__ == '__main__':
     # print(f'Info: {tsol["solution"].extra}')
 
 
-    TRIALS = 20
-    tsols = [AntColonySolver().run_and_time(problem) for _ in range(TRIALS)]
-    times = [t["elapsed"] for t in tsols]
-    sols  = [t["solution"].measure for t in tsols]
-
-    avg_time = sum(times)/TRIALS
-    avg_sol = sum(sols)/TRIALS
-
-    print(f'Average running time: {avg_time} seconds.')
-    print(f'Average string score: {avg_sol}.')
-    print('Average precision:    {:0.2f}%'.format(100*problem.expect / avg_sol))
+    # TRIALS = 1
+    # tsols = [GeneticSolver().edit_conf('MAX_ITERS', 250).edit_conf('MUT', 0.2).run_and_time(problem) for _ in range(TRIALS)]
+    # times = [t["elapsed"] for t in tsols]
+    # sols  = [t["solution"].measure for t in tsols]
+    #
+    # avg_time = sum(times)/TRIALS
+    # avg_sol = sum(sols)/TRIALS
+    #
+    # print(f'Average running time: {avg_time} seconds.')
+    # print(f'Average string score: {avg_sol}.')
+    # print('Average precision:    {:0.2f}%'.format(100*problem.expect / avg_sol))
 
 
     # profile = cProfile.Profile()
     # profile.enable()
-    #
-    # AntColonySolver().solve(problem)
-    #
+
+    print(AntColonySolver().run_and_time(problem)["elapsed"])
+
     # profile.disable()
     # profile.print_stats()
     #

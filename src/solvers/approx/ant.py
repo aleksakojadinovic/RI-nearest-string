@@ -57,7 +57,7 @@ class AntColonySolver(AbstractSolver):
             if local_best_metric < global_best_metric:
                 global_best_metric = local_best_metric
                 global_best_ant = local_best_ant
-        return CSSolution(''.join(global_best_ant), global_best_metric)
+        return CSSolution(global_best_ant, global_best_metric)
 
 
 
