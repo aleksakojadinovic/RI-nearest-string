@@ -1,3 +1,5 @@
+import distance
+
 class ystr(str):
     def __or__(self, index_list):
         return ystr(''.join(c for i, c in enumerate(str(self)) if i in index_list))
@@ -18,18 +20,18 @@ def hamming_distance(s1, s2):
 def hamming_distance_is(s1, s2, P):
     return sum(s1[i] != s2[i] for i in P)
 
+def hamming_distance2(s1, s2):
+    d = 0
+    for i in range(len(s1)):
+        if s1[i] != s2[i]:
+            d += 1
+    return d
+
 def problem_metric(string, references):
     return max(hamming_distance(string, r) for r in references)
 
 def problem_metric2(string, references):
-    mmet = 0
-    l = len(references[0])
-    for r in references:
-        ch = hamming_distance(string, r)
-        if ch == l:
-            return ch
-        mmet = max(mmet, ch)
-    return mmet
+    return max(hamming_distance2(string, r) for r in references)
 
 # Returns the alphabet for a given string
 def get_alphabet(s):
