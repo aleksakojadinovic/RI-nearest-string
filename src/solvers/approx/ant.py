@@ -3,6 +3,18 @@ import utils
 from abstractions import AbstractSolver, CSProblem, CSSolution
 from tqdm import tqdm
 
+# Pick an item from arr at random based on weights
+# Attempt to do it as fast as humanly possible
+def fast_pick(arr, weights, ws):
+    r = random.random()*ws
+    for i in range(len(arr)):
+        if r < weights[i]:
+            return arr[i]
+        r -= weights[i]
+    print(f'This should never happen.')
+    return 0
+
+
 class AntColonySolver(AbstractSolver):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -24,18 +36,19 @@ class AntColonySolver(AbstractSolver):
         A = len(alphabet)
         rho = self.config['RHO']
         colony_size = self.config['COLONY_SIZE']
+        miters = self.config['MAX_ITERS']
 
         global_best_ant = None
         global_best_metric = m
+        init_pher = 1.0 / A
+        world_trails = [[init_pher for _ in range(A)] for _ in range(m)]
+        trail_row_wise_sums = [A*init_pher for _ in range(m)]
 
-        world_trails = [[1.0 / A for _ in range(A)] for _ in range(m)]
-
-        miters = self.config['MAX_ITERS']
         for iteration in range(miters):
             local_best_ant = None
             local_best_metric = m
-            for ant_idx in range(colony_size):
-                ant = ''.join(random.choices(alphabet, weights=world_trails[next_character_index], k=1)[0] for next_character_index in range(m))
+            for _ in range(colony_size):
+                ant = ''.join(fast_pick(alphabet, world_trails[next_character_index], trail_row_wise_sums[next_character_index]) for next_character_index in range(m))
                 ant_metric = utils.problem_metric(ant, strings)
 
                 if ant_metric < local_best_metric:
@@ -57,6 +70,8 @@ class AntColonySolver(AbstractSolver):
             if local_best_metric < global_best_metric:
                 global_best_metric = local_best_metric
                 global_best_ant = local_best_ant
+
+            trail_row_wise_sums = [sum(world_trails[i]) for i in range(m)]
         return CSSolution(global_best_ant, global_best_metric)
 
 

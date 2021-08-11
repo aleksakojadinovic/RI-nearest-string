@@ -42,12 +42,14 @@ if __name__ == '__main__':
     # profile.enable()
 
 
+    profile = cProfile.Profile()
 
-    for s in [LuiEtAlGeneticSolver(), GeneticSolver()]:
-        tsol = s.run_and_time(problem)
-        print(f'{s.name()} :')
-        print(f'\t{tsol["elapsed"]}')
-        print(f'\t{tsol["solution"]}')
+    # profile.enable()
+    tsol = AntColonySolver().run_and_time(problem)
+    # profile.disable()
+    print(tsol["elapsed"])
+    print(tsol["solution"])
+    # profile.print_stats()
 
 
 
