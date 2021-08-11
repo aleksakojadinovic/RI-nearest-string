@@ -30,7 +30,6 @@ class AntColonySolver(AbstractSolver):
             'RHO': 0.1
         }
 
-
     def solve_(self, problem: CSProblem) -> CSSolution:
         m, n, alphabet, strings = problem.m, problem.n, problem.alphabet, problem.strings
         A = len(alphabet)
@@ -42,9 +41,10 @@ class AntColonySolver(AbstractSolver):
         global_best_metric = m
         init_pher = 1.0 / A
         world_trails = [[init_pher for _ in range(A)] for _ in range(m)]
-        trail_row_wise_sums = [A*init_pher for _ in range(m)]
+        trail_row_wise_sums = [1.0 for _ in range(m)]
+        alphabet_reverse_indices = dict((c, i) for i, c in enumerate(alphabet))
 
-        for iteration in range(miters):
+        for iteration in tqdm(range(miters)):
             local_best_ant = None
             local_best_metric = m
             for _ in range(colony_size):
