@@ -91,6 +91,15 @@ class CSProblem:
             lines.append(f'\tExpecting solution: {self.expect}')
         return '\r\n'.join(lines)
 
+    def save_to_file(self, filepath):
+        lines = []
+        lines.append(str(self.n))
+        lines += [s for s in self.strings]
+        if self.expect is not None:
+            lines.append(f'expect {self.expect}')
+        f = open(filepath, 'w')
+        f.write("\n".join(lines))
+
 
 class CSPLoader:
     def __init__(self, solution_file=None):

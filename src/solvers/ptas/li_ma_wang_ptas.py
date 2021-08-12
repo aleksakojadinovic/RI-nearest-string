@@ -1,24 +1,10 @@
 import math
 import numpy as np
 from itertools import combinations
-import pandas as pd
 import utils
 from abstractions import AbstractSolver, CSProblem, CSSolution
 
-import cvxopt
-
-def check_constraint(x, lhs, rhs, sign):
-    if sign == '=':
-        return np.dot(lhs, x) == rhs
-    return np.dot(lhs, x) <= rhs
-
-def check_all_constraints(x, lhss, rhss, signs):
-    return all(check_constraint(x, lhs, rhs, sign) for lhs, rhs, sign in zip(lhss, rhss, signs))
-
-
-def solve_zero_one_(self, lhs, rhs, signs):
-
-    pass
+from ortools.linear_solver import pywraplp
 
 def same_idx_list(strs):
     if not strs:
@@ -26,12 +12,18 @@ def same_idx_list(strs):
 
     return [j for j in range(len(strs[0])) if all(s[j] == strs[0][j] for s in strs)]
 
+def diff_idx_list(strs):
+    if not strs:
+        return []
+    return [j for j in range(len(strs[0])) if all(s[j] != strs[0][j] for s in strs)]
 
 def chi(strings, i, j, a):
     if strings[i][j] == a:
         return 0
     return 1
 
+def sat(s, I):
+    return ''.join(c for i, c in enumerate(s) if i in I)
 
 class LiMaWangPTASSolver(AbstractSolver):
     def __init__(self, **kwargs):
@@ -51,10 +43,9 @@ class LiMaWangPTASSolver(AbstractSolver):
 
         r_frac = self.config['r_frac']
         r = min(math.floor(r_frac*problem.n), n)
-
+        A = len(alphabet)
         for subset_index_list in combinations(range(n), r):
             subset_strings = [original_string_set[i] for i in subset_index_list]
-            print(f'Considering the following string subset: {subset_strings}')
             Q = same_idx_list(subset_strings)
             P = [j for j in range(m) if j not in Q]
 
@@ -62,7 +53,7 @@ class LiMaWangPTASSolver(AbstractSolver):
             # The target variables are binary variables of form x_j = a for every a in alphabet and for every j in P
             # meaning there will be exactly |P| * |A| variables
             # If we order them as follows: x_p0 = a0, x_p0 = a1, ... x_p0 = a|A|, x_p1 = a0, x_p1 = a1, ... x_p1 = a|A|, ....... x_p|P| = a0, x_p|P| = a1, ... x_p|P| = a|A|
-            # then for the LP variable at position i, we can reconstruct it's meaning as follows:
+            # then for the LP variable at position i, we can reconstruct its meaning as follows:
             # p_index, alphabet_index = np.unravel_indices(i, (len(P), len(A)))
 
             # First set of conditions will tell us that every p-position can correspond to exactly one alpabet letter
@@ -71,58 +62,55 @@ class LiMaWangPTASSolver(AbstractSolver):
             # for p-position 0 we shall have
             #   (x_p0 = a0) + (x_p0 = a1) + .... + (x_p0 = a|A|) = 1
 
-            print(f'|P| = {len(P)}')
-            print(f'|A| = {len(alphabet)}')
 
-            first_part_lp_lhs = np.zeros((len(P), len(P) * len(alphabet)))
-            first_part_lp_rhs = np.ones(len(P))
+            lp_matrix = np.zeros((len(P) + n, len(P)*A+n + 1), dtype='int32')
             for lp_row_idx in range(len(P)):
-                first_part_lp_lhs[lp_row_idx][lp_row_idx*len(alphabet):(lp_row_idx+1)*len(alphabet)] = np.ones(len(alphabet))
+                lp_matrix[lp_row_idx][lp_row_idx*A:(lp_row_idx+1)*A] = np.ones(A)
 
-            # print(f'First part LP lhs: ')
-            # print(first_part_lp_lhs)
-            # print(f'First part LP rhs: ')
-            # print(first_part_lp_rhs)
-
-            second_part_lp_lhs = np.zeros((n, len(P)*len(alphabet)))
-
-            for i in range(n):
-                coeffs = np.zeros(len(P) * len(alphabet))
+            lp_matrix[len(P):, len(P)*A:-1] = np.eye(n)
+            for i, lp_row_idx in enumerate(range(len(P), len(P)+n)):
                 for j in range(len(P)):
-                    for alphabet_index in range(len(alphabet)):
-                        actual_coeff_idx = j*len(alphabet) + alphabet_index
-                        coeffs[actual_coeff_idx] += chi(problem.strings, i, j, alphabet[alphabet_index])
-                second_part_lp_lhs[i] = coeffs
-
-            first_part_lp_lhs_extended = np.append(first_part_lp_lhs, np.zeros(len(P)).reshape(-1, 1), axis=1)
-            first_part_lp_rhs_extended = first_part_lp_rhs
-
-            second_part_lp_lhs_extended = np.append(second_part_lp_lhs, -np.ones(n).reshape(-1, 1), axis=1)
-            second_part_lp_rhs_extended = -np.array([utils.hamming_distance_is(problem.strings[i], problem.strings[Q[0]], Q) for i in range(n)])
-
-            final_lp_lhs = np.vstack((first_part_lp_lhs_extended, second_part_lp_lhs_extended))
-            final_lp_rhs = np.append(first_part_lp_rhs_extended, second_part_lp_rhs_extended)
-            lp_signs = ['=' for _ in range(len(P))] + ['<=' for _ in range(n)]
+                    for a in range(A):
+                        lp_matrix[lp_row_idx][j*A + a] += chi(problem.strings, i, j, alphabet[a])
 
 
+            lp_matrix[:, -1] = -np.ones(len(P) + n)
 
-            print(f'LPl:')
-            print(pd.DataFrame(final_lp_lhs))
-            print(f'LPr:')
-            print(pd.DataFrame(final_lp_rhs))
-            print(f'Signs:')
-            print(pd.DataFrame(lp_signs))
+            lp_b = np.ones(len(P) + n)
+            lp_b[len(P):] = -np.array([utils.hamming_distance(sat(si, Q), sat(subset_strings[0], Q)) for si in problem.strings])
 
 
+            solver = pywraplp.Solver.CreateSolver('SCIP')
+            infinity = solver.infinity()
 
+            problem_variables = [solver.IntVar(0.0, 1.0, f'y_{i}') for i in range(len(P)*A + n + 1)] + [solver.IntVar(0.0, m, 'd')]
+            # for i, (row, b) in enumerate(zip(lp_matrix, lp_b)):
+            #     constraint = solver.RowConstraint(-infinity, b, '')
+            #     for j, coeff in enumerate(row):
+            #         _ = problem_variables[j]
+            #         constraint.SetCoefficient(problem_variables[j], int(coeff))
 
+            for i, (l, r) in enumerate(zip(lp_matrix, lp_b)):
+                constraint = [coeff*var for coeff, var in zip(l, problem_variables)]
+                solver.Add(sum(constraint) <= r)
+                # solver.Add(sum(coeff*var) <= r for coeff, var in zip(l, problem_variables))
+
+            objective = solver.Objective()
+            for j in range(len(P)*A+n + 1):
+
+                objective.SetCoefficient(problem_variables[j], 1 if j == len(P)*A+n else 0)
+
+            objective.SetMinimization()
+
+            status = solver.Solve()
+
+            solution_vector = np.array([int(pv.solution_value()) for pv in problem_variables])
+            print(solution_vector)
 
 
 
             break
 
-            # The first part of this LP problem will have
-            # |P| * |A| variables and |P| constraints
 
 
 

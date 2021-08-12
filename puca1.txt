@@ -1,0 +1,12 @@
+8
+cbcdadb
+faabadb
+cbacadb
+cbacabb
+dbaaadb
+cbacadb
+cbadadb
+cbacadb
+expect 3
+
+

@@ -27,7 +27,7 @@ class LuiEtAlGeneticSolver(AbstractSolver):
 
     def get_default_config(self) -> dict:
         return {
-            'MAX_ITERS': 250,
+            'MAX_ITERS': 500,
             'POP_SIZE': 10,
             'MUTATION_RATE': 0.05,
             'TOURNAMENT_SIZE': 3

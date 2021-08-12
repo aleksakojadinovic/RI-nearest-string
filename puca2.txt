@@ -1,0 +1,10 @@
+8
+abeadad
+fbeadad
+fbeafad
+fbbadbc
+dbeadad
+dbeadaa
+fbeadad
+fbeadad
+expect 3

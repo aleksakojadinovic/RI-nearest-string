@@ -11,7 +11,6 @@ def fast_pick(arr, weights, ws):
         if r < weights[i]:
             return arr[i]
         r -= weights[i]
-    print(f'This should never happen.')
     return 0
 
 
@@ -42,16 +41,16 @@ class AntColonySolver(AbstractSolver):
         init_pher = 1.0 / A
         world_trails = [[init_pher for _ in range(A)] for _ in range(m)]
         trail_row_wise_sums = [1.0 for _ in range(m)]
-        alphabet_reverse_indices = dict((c, i) for i, c in enumerate(alphabet))
 
         for iteration in tqdm(range(miters)):
+
             local_best_ant = None
             local_best_metric = m
             for _ in range(colony_size):
                 ant = ''.join(fast_pick(alphabet, world_trails[next_character_index], trail_row_wise_sums[next_character_index]) for next_character_index in range(m))
                 ant_metric = utils.problem_metric(ant, strings)
 
-                if ant_metric < local_best_metric:
+                if ant_metric <= local_best_metric:
                     local_best_metric = ant_metric
                     local_best_ant = ant
 
