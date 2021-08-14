@@ -1,0 +1,216 @@
+Sat Aug 14 16:32:45 2021    profile_out.prof
+
+         785112 function calls (779896 primitive calls) in 5.558 seconds
+
+   Ordered by: cumulative time
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.000    0.000    5.558    5.558 C:\Users\aleksa\Documents\FAKS\RI\repo\src\abstractions.py:211(run_and_time)
+        1    0.000    0.000    5.558    5.558 C:\Users\aleksa\Documents\FAKS\RI\repo\src\abstractions.py:205(solve)
+        1    0.002    0.002    5.558    5.558 C:\Users\aleksa\Documents\FAKS\RI\repo\src\solvers\ptas\li_ma_wang_ptas.py:141(solve_)
+       45    0.071    0.002    5.495    0.122 C:\Users\aleksa\Documents\FAKS\RI\repo\src\solvers\ptas\li_ma_wang_ptas.py:55(solve_lp_problem_relax)
+       45    0.014    0.000    5.023    0.112 C:\Python39\lib\site-packages\scipy\optimize\_linprog.py:169(linprog)
+       45    0.000    0.000    4.538    0.101 C:\Python39\lib\site-packages\scipy\optimize\_linprog_ip.py:821(_linprog_ip)
+       45    0.116    0.003    4.538    0.101 C:\Python39\lib\site-packages\scipy\optimize\_linprog_ip.py:551(_ip_hsd)
+      472    0.413    0.001    4.028    0.009 C:\Python39\lib\site-packages\scipy\optimize\_linprog_ip.py:129(_get_delta)
+    17759    1.685    0.000    1.685    0.000 {method 'dot' of 'numpy.ndarray' objects}
+      474    0.004    0.000    1.362    0.003 C:\Python39\lib\site-packages\scipy\optimize\_linprog_ip.py:42(_get_solver)
+      472    0.002    0.000    1.358    0.003 C:\Python39\lib\site-packages\scipy\linalg\decomp_cholesky.py:93(cho_factor)
+      472    1.287    0.003    1.357    0.003 C:\Python39\lib\site-packages\scipy\linalg\decomp_cholesky.py:13(_cholesky)
+     1890    0.037    0.000    1.147    0.001 C:\Python39\lib\site-packages\scipy\optimize\_linprog_ip.py:330(_sym_solve)
+     1884    0.005    0.000    0.555    0.000 C:\Python39\lib\site-packages\scipy\optimize\_linprog_ip.py:111(solve)
+     1884    0.271    0.000    0.551    0.000 C:\Python39\lib\site-packages\scipy\linalg\decomp_cholesky.py:157(cho_solve)
+27978/23122    0.138    0.000    0.520    0.000 {built-in method numpy.core._multiarray_umath.implement_array_function}
+      517    0.012    0.000    0.350    0.001 C:\Python39\lib\site-packages\scipy\optimize\_linprog_ip.py:454(_indicators)
+     4250    0.271    0.000    0.334    0.000 C:\Python39\lib\site-packages\numpy\lib\function_base.py:422(asarray_chkfinite)
+       45    0.001    0.000    0.319    0.007 C:\Users\aleksa\Documents\FAKS\RI\repo\src\solvers\ptas\li_ma_wang_ptas.py:95(<listcomp>)
+      900    0.001    0.000    0.303    0.000 C:\Users\aleksa\Documents\FAKS\RI\repo\src\solvers\ptas\li_ma_wang_ptas.py:32(sat)
+      945    0.017    0.000    0.302    0.000 {method 'join' of 'str' objects}
+   113440    0.285    0.000    0.285    0.000 C:\Users\aleksa\Documents\FAKS\RI\repo\src\solvers\ptas\li_ma_wang_ptas.py:33(<genexpr>)
+       45    0.007    0.000    0.270    0.006 C:\Python39\lib\site-packages\scipy\optimize\_linprog_util.py:443(_presolve)
+       45    0.000    0.000    0.241    0.005 <__array_function__ internals>:2(matrix_rank)
+       45    0.001    0.000    0.241    0.005 C:\Python39\lib\site-packages\numpy\linalg\linalg.py:1804(matrix_rank)
+       45    0.000    0.000    0.238    0.005 <__array_function__ internals>:2(svd)
+       45    0.237    0.005    0.237    0.005 C:\Python39\lib\site-packages\numpy\linalg\linalg.py:1482(svd)
+       45    0.038    0.001    0.145    0.003 C:\Python39\lib\site-packages\scipy\optimize\_linprog_util.py:995(_get_Abc)
+     1034    0.014    0.000    0.128    0.000 C:\Python39\lib\site-packages\scipy\optimize\_linprog_ip.py:475(r_d)
+     1034    0.010    0.000    0.117    0.000 C:\Python39\lib\site-packages\scipy\optimize\_linprog_ip.py:472(r_p)
+     1416    0.051    0.000    0.117    0.000 C:\Python39\lib\site-packages\scipy\optimize\_linprog_ip.py:350(_get_step)
+      495    0.001    0.000    0.098    0.000 <__array_function__ internals>:2(concatenate)
+    14568    0.097    0.000    0.097    0.000 {method 'reduce' of 'numpy.ufunc' objects}
+        5    0.000    0.000    0.095    0.019 C:\Python39\lib\site-packages\scipy\optimize\_linprog_ip.py:116(solve)
+        5    0.094    0.019    0.095    0.019 C:\Python39\lib\site-packages\scipy\linalg\basic.py:40(solve)
+     9643    0.020    0.000    0.070    0.000 C:\Python39\lib\site-packages\numpy\core\fromnumeric.py:70(_wrapreduction)
+     4136    0.005    0.000    0.061    0.000 C:\Python39\lib\site-packages\scipy\optimize\_linprog_ip.py:487(norm)
+     4475    0.006    0.000    0.058    0.000 {method 'all' of 'numpy.ndarray' objects}
+      180    0.000    0.000    0.057    0.000 <__array_function__ internals>:2(vstack)
+     4136    0.004    0.000    0.057    0.000 <__array_function__ internals>:2(norm)
+      180    0.001    0.000    0.056    0.000 C:\Python39\lib\site-packages\numpy\core\shape_base.py:223(vstack)
+     5035    0.006    0.000    0.056    0.000 <__array_function__ internals>:2(any)
+     4475    0.003    0.000    0.052    0.000 C:\Python39\lib\site-packages\numpy\core\_methods.py:59(_all)
+     1000    0.001    0.000    0.048    0.000 C:\Users\aleksa\Documents\FAKS\RI\repo\src\utils.py:17(hamming_distance)
+     1000    0.021    0.000    0.047    0.000 {built-in method builtins.sum}
+     4136    0.023    0.000    0.046    0.000 C:\Python39\lib\site-packages\numpy\linalg\linalg.py:2362(norm)
+      135    0.000    0.000    0.045    0.000 <__array_function__ internals>:2(hstack)
+      135    0.000    0.000    0.044    0.000 C:\Python39\lib\site-packages\numpy\core\shape_base.py:286(hstack)
+       45    0.021    0.000    0.044    0.001 C:\Users\aleksa\Documents\FAKS\RI\repo\src\solvers\ptas\li_ma_wang_ptas.py:35(reconstruct_solution)
+     4248    0.004    0.000    0.042    0.000 <__array_function__ internals>:2(amin)
+     5035    0.007    0.000    0.038    0.000 C:\Python39\lib\site-packages\numpy\core\fromnumeric.py:2256(any)
+     1699    0.002    0.000    0.036    0.000 {built-in method builtins.max}
+     4248    0.005    0.000    0.035    0.000 C:\Python39\lib\site-packages\numpy\core\fromnumeric.py:2742(amin)
+       55    0.000    0.000    0.033    0.001 C:\Users\aleksa\Documents\FAKS\RI\repo\src\utils.py:31(problem_metric)
+      605    0.000    0.000    0.033    0.000 C:\Users\aleksa\Documents\FAKS\RI\repo\src\utils.py:32(<genexpr>)
+    10443    0.032    0.000    0.032    0.000 {built-in method numpy.array}
+       45    0.000    0.000    0.031    0.001 C:\Python39\lib\site-packages\scipy\optimize\_linprog_util.py:885(_parse_linprog)
+       45    0.004    0.000    0.030    0.001 C:\Python39\lib\site-packages\scipy\optimize\_linprog_util.py:179(_clean_inputs)
+     6837    0.006    0.000    0.027    0.000 C:\Python39\lib\site-packages\numpy\core\numeric.py:148(ones)
+   194770    0.026    0.000    0.026    0.000 C:\Users\aleksa\Documents\FAKS\RI\repo\src\utils.py:18(<genexpr>)
+     8656    0.005    0.000    0.024    0.000 C:\Python39\lib\site-packages\numpy\core\_asarray.py:23(asarray)
+     5623    0.015    0.000    0.022    0.000 C:\Python39\lib\random.py:474(choices)
+     5170    0.004    0.000    0.017    0.000 <__array_function__ internals>:2(dot)
+   112460    0.015    0.000    0.015    0.000 C:\Users\aleksa\Documents\FAKS\RI\repo\src\solvers\ptas\li_ma_wang_ptas.py:27(chi)
+       45    0.000    0.000    0.014    0.000 C:\Users\aleksa\Documents\FAKS\RI\repo\src\solvers\ptas\li_ma_wang_ptas.py:17(same_idx_list)
+       45    0.005    0.000    0.014    0.000 C:\Users\aleksa\Documents\FAKS\RI\repo\src\solvers\ptas\li_ma_wang_ptas.py:20(<listcomp>)
+     6837    0.005    0.000    0.013    0.000 <__array_function__ internals>:2(copyto)
+       45    0.009    0.000    0.013    0.000 C:\Python39\lib\site-packages\scipy\optimize\_linprog_util.py:1281(_postsolve)
+       45    0.013    0.000    0.013    0.000 C:\Users\aleksa\Documents\FAKS\RI\repo\src\solvers\ptas\li_ma_wang_ptas.py:154(<listcomp>)
+      562    0.002    0.000    0.012    0.000 C:\Python39\lib\site-packages\scipy\optimize\_linprog_ip.py:433(_get_blind_start)
+       90    0.000    0.000    0.011    0.000 <__array_function__ internals>:2(array_equal)
+       90    0.000    0.000    0.011    0.000 C:\Python39\lib\site-packages\numpy\core\numeric.py:2392(array_equal)
+     1057    0.011    0.000    0.011    0.000 {built-in method numpy.zeros}
+      270    0.000    0.000    0.011    0.000 <__array_function__ internals>:2(sum)
+     1034    0.003    0.000    0.010    0.000 C:\Python39\lib\site-packages\scipy\optimize\_linprog_ip.py:482(mu)
+     2371    0.008    0.000    0.010    0.000 C:\Python39\lib\site-packages\scipy\linalg\blas.py:382(getter)
+      270    0.001    0.000    0.010    0.000 C:\Python39\lib\site-packages\numpy\core\fromnumeric.py:2111(sum)
+     6837    0.008    0.000    0.008    0.000 {built-in method numpy.empty}
+    11250    0.004    0.000    0.008    0.000 {built-in method builtins.all}
+   405/45    0.001    0.000    0.008    0.000 C:\Python39\lib\copy.py:128(deepcopy)
+      702    0.001    0.000    0.007    0.000 <__array_function__ internals>:2(atleast_2d)
+       45    0.000    0.000    0.007    0.000 C:\Python39\lib\copy.py:258(_reconstruct)
+      405    0.000    0.000    0.007    0.000 C:\Python39\lib\copy.py:263(<genexpr>)
+      472    0.006    0.000    0.006    0.000 C:\Python39\lib\site-packages\scipy\optimize\_linprog_ip.py:413(_do_step)
+     1034    0.002    0.000    0.006    0.000 C:\Python39\lib\site-packages\scipy\optimize\_linprog_ip.py:478(r_g)
+     5623    0.004    0.000    0.006    0.000 C:\Python39\lib\random.py:498(<listcomp>)
+       90    0.000    0.000    0.005    0.000 C:\Python39\lib\site-packages\scipy\optimize\_linprog_util.py:126(_format_A_constraints)
+      270    0.005    0.000    0.005    0.000 {method '__deepcopy__' of 'numpy.ndarray' objects}
+      702    0.003    0.000    0.005    0.000 C:\Python39\lib\site-packages\numpy\core\shape_base.py:82(atleast_2d)
+    33750    0.005    0.000    0.005    0.000 C:\Users\aleksa\Documents\FAKS\RI\repo\src\solvers\ptas\li_ma_wang_ptas.py:20(<genexpr>)
+     9643    0.004    0.000    0.004    0.000 C:\Python39\lib\site-packages\numpy\core\fromnumeric.py:71(<dictcomp>)
+       90    0.000    0.000    0.004    0.000 {method 'sum' of 'numpy.ndarray' objects}
+       90    0.000    0.000    0.004    0.000 C:\Python39\lib\site-packages\numpy\core\_methods.py:45(_sum)
+     4140    0.004    0.000    0.004    0.000 {method 'ravel' of 'numpy.ndarray' objects}
+    19987    0.003    0.000    0.003    0.000 {built-in method builtins.len}
+       45    0.002    0.000    0.003    0.000 C:\Python39\lib\site-packages\scipy\optimize\_linprog_util.py:1383(_check_result)
+     3525    0.002    0.000    0.002    0.000 {method 'get' of 'dict' objects}
+     4226    0.001    0.000    0.002    0.000 C:\Python39\lib\site-packages\numpy\linalg\linalg.py:112(isComplexType)
+       45    0.000    0.000    0.002    0.000 C:\Python39\lib\site-packages\numpy\lib\twodim_base.py:156(eye)
+     2018    0.002    0.000    0.002    0.000 {built-in method builtins.getattr}
+     8857    0.002    0.000    0.002    0.000 {built-in method builtins.issubclass}
+     9688    0.002    0.000    0.002    0.000 {method 'items' of 'dict' objects}
+     1202    0.001    0.000    0.001    0.000 C:\Python39\lib\site-packages\numpy\core\_asarray.py:110(asanyarray)
+       45    0.000    0.000    0.001    0.000 <__array_function__ internals>:2(count_nonzero)
+     5035    0.001    0.000    0.001    0.000 C:\Python39\lib\site-packages\numpy\core\fromnumeric.py:2251(_any_dispatcher)
+       90    0.000    0.000    0.001    0.000 <__array_function__ internals>:2(all)
+      989    0.001    0.000    0.001    0.000 {built-in method builtins.min}
+     2832    0.001    0.000    0.001    0.000 C:\Python39\lib\site-packages\scipy\optimize\_linprog_ip.py:745(eta)
+       45    0.000    0.000    0.001    0.000 C:\Python39\lib\site-packages\numpy\core\numeric.py:424(count_nonzero)
+     5623    0.001    0.000    0.001    0.000 {built-in method _bisect.bisect_right}
+     6837    0.001    0.000    0.001    0.000 C:\Python39\lib\site-packages\numpy\core\multiarray.py:1054(copyto)
+     4136    0.001    0.000    0.001    0.000 C:\Python39\lib\site-packages\numpy\linalg\linalg.py:2358(_norm_dispatcher)
+      315    0.000    0.000    0.001    0.000 {method 'any' of 'numpy.ndarray' objects}
+       90    0.000    0.000    0.001    0.000 C:\Python39\lib\site-packages\numpy\core\fromnumeric.py:2355(all)
+     5170    0.001    0.000    0.001    0.000 C:\Python39\lib\site-packages\numpy\core\multiarray.py:716(dot)
+      472    0.001    0.000    0.001    0.000 {method 'reshape' of 'numpy.ndarray' objects}
+      135    0.000    0.000    0.001    0.000 <__array_function__ internals>:2(nonzero)
+      140    0.000    0.000    0.001    0.000 <__array_function__ internals>:2(atleast_1d)
+       10    0.000    0.000    0.001    0.000 C:\Python39\lib\site-packages\scipy\_lib\_util.py:216(_asarray_validated)
+     4248    0.001    0.000    0.001    0.000 C:\Python39\lib\site-packages\numpy\core\fromnumeric.py:2737(_amin_dispatcher)
+      315    0.000    0.000    0.001    0.000 C:\Python39\lib\site-packages\numpy\core\_methods.py:53(_any)
+       45    0.001    0.000    0.001    0.000 C:\Users\aleksa\Documents\FAKS\RI\repo\src\solvers\ptas\li_ma_wang_ptas.py:36(<listcomp>)
+     5623    0.001    0.000    0.001    0.000 {method 'random' of '_random.Random' objects}
+       45    0.000    0.000    0.001    0.000 {method 'max' of 'numpy.ndarray' objects}
+     2366    0.001    0.000    0.001    0.000 C:\Python39\lib\site-packages\scipy\linalg\misc.py:182(_datacopied)
+      140    0.000    0.000    0.001    0.000 C:\Python39\lib\site-packages\numpy\core\shape_base.py:24(atleast_1d)
+      135    0.000    0.000    0.001    0.000 C:\Python39\lib\site-packages\numpy\core\fromnumeric.py:1827(nonzero)
+       90    0.000    0.000    0.001    0.000 C:\Python39\lib\collections\__init__.py:447(_replace)
+       45    0.000    0.000    0.001    0.000 C:\Python39\lib\site-packages\numpy\core\_methods.py:37(_amax)
+      315    0.000    0.000    0.001    0.000 C:\Python39\lib\site-packages\numpy\core\shape_base.py:219(_vhstack_dispatcher)
+     1436    0.001    0.000    0.001    0.000 {method 'append' of 'list' objects}
+       45    0.000    0.000    0.000    0.000 C:\Users\aleksa\Documents\FAKS\RI\repo\src\solvers\ptas\li_ma_wang_ptas.py:102(<listcomp>)
+      180    0.000    0.000    0.000    0.000 <__array_function__ internals>:2(where)
+      135    0.000    0.000    0.000    0.000 C:\Python39\lib\site-packages\numpy\core\fromnumeric.py:52(_wrapfunc)
+       45    0.000    0.000    0.000    0.000 C:\Python39\lib\site-packages\scipy\optimize\_linprog_util.py:1238(_unscale)
+      315    0.000    0.000    0.000    0.000 C:\Python39\lib\copy.py:242(_keep_alive)
+      505    0.000    0.000    0.000    0.000 C:\Python39\lib\site-packages\scipy\sparse\base.py:1205(isspmatrix)
+       45    0.000    0.000    0.000    0.000 C:\Users\aleksa\Documents\FAKS\RI\repo\src\solvers\ptas\li_ma_wang_ptas.py:104(<listcomp>)
+       45    0.000    0.000    0.000    0.000 C:\Python39\lib\site-packages\scipy\optimize\_linprog_util.py:68(_check_sparse_inputs)
+      315    0.000    0.000    0.000    0.000 C:\Python39\lib\site-packages\numpy\core\shape_base.py:208(_arrays_for_stack_dispatcher)
+       90    0.000    0.000    0.000    0.000 C:\Python39\lib\site-packages\scipy\optimize\_linprog_util.py:157(_format_b_constraints)
+      270    0.000    0.000    0.000    0.000 {built-in method __new__ of type object at 0x00007FFB7C3F5C60}
+       90    0.000    0.000    0.000    0.000 C:\Python39\lib\collections\__init__.py:437(_make)
+       45    0.000    0.000    0.000    0.000 {method '__reduce_ex__' of 'object' objects}
+      180    0.000    0.000    0.000    0.000 {method 'nonzero' of 'numpy.ndarray' objects}
+     1158    0.000    0.000    0.000    0.000 {built-in method builtins.isinstance}
+       45    0.000    0.000    0.000    0.000 C:\Python39\lib\site-packages\numpy\core\numerictypes.py:359(issubdtype)
+      135    0.000    0.000    0.000    0.000 {method 'astype' of 'numpy.ndarray' objects}
+      180    0.000    0.000    0.000    0.000 <string>:1(<lambda>)
+       45    0.000    0.000    0.000    0.000 C:\Python39\lib\site-packages\numpy\linalg\linalg.py:135(_commonType)
+      472    0.000    0.000    0.000    0.000 {method 'transpose' of 'numpy.ndarray' objects}
+       45    0.000    0.000    0.000    0.000 {built-in method numpy.arange}
+      316    0.000    0.000    0.000    0.000 {built-in method builtins.hasattr}
+       90    0.000    0.000    0.000    0.000 C:\Python39\lib\site-packages\numpy\core\numerictypes.py:285(issubclass_)
+      225    0.000    0.000    0.000    0.000 {method 'flatten' of 'numpy.ndarray' objects}
+       45    0.000    0.000    0.000    0.000 C:\Python39\lib\site-packages\numpy\core\getlimits.py:382(__new__)
+        6    0.000    0.000    0.000    0.000 C:\Python39\lib\site-packages\scipy\linalg\lapack.py:886(get_lapack_funcs)
+      810    0.000    0.000    0.000    0.000 {built-in method builtins.id}
+      702    0.000    0.000    0.000    0.000 C:\Python39\lib\site-packages\numpy\core\shape_base.py:78(_atleast_2d_dispatcher)
+        6    0.000    0.000    0.000    0.000 C:\Python39\lib\site-packages\scipy\linalg\blas.py:324(_get_funcs)
+       90    0.000    0.000    0.000    0.000 {method 'copy' of 'numpy.ndarray' objects}
+        6    0.000    0.000    0.000    0.000 {built-in method _warnings.warn}
+       13    0.000    0.000    0.000    0.000 C:\Python39\lib\site-packages\scipy\linalg\basic.py:23(_solve_check)
+       45    0.000    0.000    0.000    0.000 C:\Python39\lib\copyreg.py:94(__newobj__)
+       45    0.000    0.000    0.000    0.000 C:\Python39\lib\site-packages\numpy\linalg\linalg.py:107(_makearray)
+       90    0.000    0.000    0.000    0.000 C:\Python39\lib\site-packages\numpy\linalg\linalg.py:125(_realType)
+      495    0.000    0.000    0.000    0.000 C:\Python39\lib\site-packages\numpy\core\multiarray.py:143(concatenate)
+      270    0.000    0.000    0.000    0.000 C:\Python39\lib\site-packages\numpy\core\fromnumeric.py:2106(_sum_dispatcher)
+       90    0.000    0.000    0.000    0.000 C:\Python39\lib\site-packages\scipy\optimize\optimize.py:120(__getattr__)
+        6    0.000    0.000    0.000    0.000 C:\Python39\lib\site-packages\scipy\linalg\blas.py:259(find_best_blas_type)
+      225    0.000    0.000    0.000    0.000 {method 'pop' of 'dict' objects}
+       45    0.000    0.000    0.000    0.000 C:\Python39\lib\site-packages\numpy\linalg\linalg.py:102(get_linalg_error_extobj)
+      135    0.000    0.000    0.000    0.000 {method 'squeeze' of 'numpy.ndarray' objects}
+       45    0.000    0.000    0.000    0.000 {method 'startswith' of 'str' objects}
+      135    0.000    0.000    0.000    0.000 C:\Python39\lib\site-packages\numpy\core\fromnumeric.py:1823(_nonzero_dispatcher)
+      180    0.000    0.000    0.000    0.000 C:\Python39\lib\site-packages\numpy\core\multiarray.py:321(where)
+       45    0.000    0.000    0.000    0.000 C:\Python39\lib\collections\__init__.py:464(__getnewargs__)
+       45    0.000    0.000    0.000    0.000 C:\Users\aleksa\Documents\FAKS\RI\repo\src\solvers\ptas\li_ma_wang_ptas.py:152(<listcomp>)
+        4    0.000    0.000    0.000    0.000 {method 'format' of 'str' objects}
+      140    0.000    0.000    0.000    0.000 C:\Python39\lib\site-packages\numpy\core\shape_base.py:20(_atleast_1d_dispatcher)
+       45    0.000    0.000    0.000    0.000 C:\Python39\lib\site-packages\scipy\optimize\optimize.py:145(_check_unknown_options)
+       45    0.000    0.000    0.000    0.000 {method 'upper' of 'str' objects}
+       90    0.000    0.000    0.000    0.000 C:\Python39\lib\site-packages\numpy\core\fromnumeric.py:2350(_all_dispatcher)
+       45    0.000    0.000    0.000    0.000 C:\Python39\lib\site-packages\numpy\linalg\linalg.py:193(_assert_stacked_2d)
+       90    0.000    0.000    0.000    0.000 C:\Python39\lib\site-packages\numpy\core\numeric.py:2388(_array_equal_dispatcher)
+       45    0.000    0.000    0.000    0.000 C:\Python39\lib\site-packages\scipy\optimize\_linprog_util.py:988(<dictcomp>)
+        3    0.000    0.000    0.000    0.000 C:\Python39\lib\warnings.py:403(__init__)
+       45    0.000    0.000    0.000    0.000 {method 'lower' of 'str' objects}
+       45    0.000    0.000    0.000    0.000 C:\Python39\lib\site-packages\numpy\core\numeric.py:420(_count_nonzero_dispatcher)
+       45    0.000    0.000    0.000    0.000 C:\Python39\lib\site-packages\numpy\linalg\linalg.py:1478(_svd_dispatcher)
+       90    0.000    0.000    0.000    0.000 C:\Python39\lib\copy.py:182(_deepcopy_atomic)
+       45    0.000    0.000    0.000    0.000 C:\Python39\lib\site-packages\numpy\linalg\linalg.py:1800(_matrix_rank_dispatcher)
+        3    0.000    0.000    0.000    0.000 C:\Python39\lib\warnings.py:96(_showwarnmsg)
+        1    0.000    0.000    0.000    0.000 C:\Python39\lib\copyreg.py:103(_slotnames)
+       10    0.000    0.000    0.000    0.000 C:\Python39\lib\site-packages\numpy\ma\core.py:6371(isMaskedArray)
+        1    0.000    0.000    0.000    0.000 C:\Users\aleksa\Documents\FAKS\RI\repo\src\abstractions.py:148(__init__)
+        1    0.000    0.000    0.000    0.000 C:\Users\aleksa\Documents\FAKS\RI\repo\src\solvers\ptas\li_ma_wang_ptas.py:132(__init__)
+        3    0.000    0.000    0.000    0.000 C:\Python39\lib\warnings.py:20(_showwarnmsg_impl)
+        3    0.000    0.000    0.000    0.000 C:\Python39\lib\site-packages\scipy\linalg\blas.py:306(<listcomp>)
+        1    0.000    0.000    0.000    0.000 C:\Users\aleksa\Documents\FAKS\RI\repo\src\abstractions.py:183(__init__)
+        1    0.000    0.000    0.000    0.000 C:\Users\aleksa\Documents\FAKS\RI\repo\src\solvers\ptas\li_ma_wang_ptas.py:138(get_default_config)
+        3    0.000    0.000    0.000    0.000 {method 'index' of 'list' objects}
+        2    0.000    0.000    0.000    0.000 C:\Users\aleksa\Documents\FAKS\RI\repo\src\abstractions.py:161(compare_with_ref_)
+        2    0.000    0.000    0.000    0.000 {built-in method time.time}
+        1    0.000    0.000    0.000    0.000 {method 'get' of 'mappingproxy' objects}
+        1    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+        1    0.000    0.000    0.000    0.000 C:\Users\aleksa\Documents\FAKS\RI\repo\src\abstractions.py:198(edit_conf)
+
+

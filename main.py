@@ -1,6 +1,10 @@
+import pstats
 import random
+import time
+from concurrent.futures import ThreadPoolExecutor
 
 import matplotlib.pyplot as plt
+from tqdm import tqdm
 
 import utils
 from abstractions import CSProblem, CSPLoader
@@ -17,29 +21,48 @@ import pandas as pd
 import cProfile
 
 if __name__ == '__main__':
-    sols_path = 'results_csp_rnd.csv'
+    # sols_path = 'results_csp_rnd.csv'
+    #
+    # loader = CSPLoader('../results_csp_rnd.csv')
+    # problem = loader.load_csp('csps/2-10-250-1-0.csp')
+    #
+    #
+    # # problem = CSProblem.from_file('examples/example3.txt')
+    #
+    # # print(StringSearchSolver().solve(problem).measure)
+    #
+    # profile = cProfile.Profile()
+    # profile.enable()
+    #
+    # lmw = LiMaWangPTASSolver()
+    # r = 2
+    # lmw.edit_conf('r', 2)
+    # s = lmw.run_and_time(problem)
+    # profile.disable()
+    # profile.dump_stats('profile_out.prof')
+    # stream = open('profile_out.txt', 'w')
+    # stats = pstats.Stats('profile_out.prof', stream=stream)
+    # stats.sort_stats('cumtime')
+    # stats.print_stats()
+    #
+    # print(f'Total time: {s["elapsed"]}')
 
-    loader = CSPLoader('../results_csp_rnd.csv')
-    problem = loader.load_csp('csps/2-10-250-1-0.csp')
+    def task(i):
+        time.sleep(2)
+        print(f'task {i}')
+
+    with ThreadPoolExecutor(max_workers=2) as tpe:
+        tpe.submit(task, 5)
 
 
-    # problem = CSProblem.from_file('examples/example3.txt')
 
-    # print(StringSearchSolver().solve(problem).measure)
 
-    p = random_problem(10, ['a', 'b', 'c'], 9)
-    lmw = LiMaWangPTASSolver()
-    r_range = list(range(2, int(p.n / 2)))
-    measures = []
-    for r in r_range:
-        lmw.edit_conf('r', r)
-        s = lmw.solve(p)
-        measures.append(s.measure)
 
-    for m in measures:
-        print(m)
 
-    print(PruningSolver().solve(p))
+
+
+
+
 
 
 

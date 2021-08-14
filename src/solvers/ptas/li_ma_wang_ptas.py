@@ -2,22 +2,18 @@ import math
 import random
 import sys
 from typing import List
-
 import numpy as np
 from itertools import combinations
-
 from tqdm import tqdm
-
 import utils
 from abstractions import AbstractSolver, CSProblem, CSSolution
 from scipy.optimize import linprog
 
-from ortools.linear_solver import pywraplp
+from concurrent.futures import ThreadPoolExecutor
 
 def same_idx_list(strs):
     if not strs:
         return []
-
     return [j for j in range(len(strs[0])) if all(s[j] == strs[0][j] for s in strs)]
 
 def diff_idx_list(strs):
@@ -32,44 +28,6 @@ def chi(strings, i, j, a):
 
 def sat(s, I):
     return ''.join(c for i, c in enumerate(s) if i in I)
-
-def solve_lp_problem_pywrap(P, Q, alphabet, m, n, original_strings, subset_strings):
-    A = len(alphabet)
-    solver = pywraplp.Solver.CreateSolver('SCIP')
-    x_variables = [solver.NumVar(0.0, 1.0, f'x_{i}') for i in range(len(P) * A)]
-    d_var = solver.NumVar(0.0, solver.infinity(), 'd')
-    for i in range(len(P)):
-        solver.Add(sum(x_variables[i * A: (i + 1) * A]) == 1)
-
-    for i in range(n):
-        var_coeffs = [0 for _ in x_variables]
-        for j in range(len(P)):
-            for a in range(A):
-                var_pos_in_array = j * A + a
-                coeff = chi(original_strings, i, j, alphabet[a])
-                var_coeffs[var_pos_in_array] = coeff
-        var_sum = sum([coeff * x for coeff, x in zip(var_coeffs, x_variables)] + [-1 * d_var])
-        solver.Add(var_sum <= -utils.hamming_distance(sat(original_strings[i], Q), sat(subset_strings[0], Q)))
-
-    status = solver.Minimize(d_var)
-    if status != pywraplp.Solver.OPTIMAL:
-        return None
-
-    s_prime_as_list = ['' for _ in range(m)]
-    for x_index in range(m):
-        if x_index in Q:
-            s_prime_as_list[x_index] = subset_strings[0][x_index]
-        else:
-            candidate_vars = x_variables[x_index * A:(x_index + 1) * A]
-            candidate_vars_sols = [v.solution_value() for v in candidate_vars]
-
-            # For each position j we treat all of its a-solutions as the probability distribution
-            # for picking the letter a, that is j: (xja1, xja2, ... xja|A|) is the distrib
-            alph_idx = random.choices(range(len(candidate_vars)), k=1, weights=candidate_vars_sols)
-            s_prime_as_list[x_index] = alphabet[alph_idx]
-
-    s_prime = ''.join(s_prime_as_list)
-    return s_prime
 
 def reconstruct_solution(m, Q, A, subset_strings, x_values, alphabet):
     s_prime_as_list = ['' for _ in range(m)]
@@ -94,7 +52,7 @@ def reconstruct_solution(m, Q, A, subset_strings, x_values, alphabet):
 def solve_lp_problem_relax(P, Q, alphabet, m, n, original_strings, subset_strings):
     if not Q:
         return None
-    LP_T_ = 'float32'
+    LP_T_ = 'float64'
 
     A = len(alphabet)
     nP = len(P)
@@ -111,7 +69,7 @@ def solve_lp_problem_relax(P, Q, alphabet, m, n, original_strings, subset_string
     for i in range(nP):
         left_bound = i*A
         right_bound = (i+1)*A
-        lp_eq_matrix[i][left_bound:right_bound] = np.ones(A)
+        lp_eq_matrix[i][left_bound:right_bound] = np.ones(A, dtype=LP_T_)
 
     # The ds are not in this part and they remain zeros since the matrix was constructed with np.zerps
     # RHS are all ones
@@ -123,7 +81,7 @@ def solve_lp_problem_relax(P, Q, alphabet, m, n, original_strings, subset_string
     # is j*A + a
     lp_leq_matrix = np.zeros((n, num_variables), dtype=LP_T_)
     # Each of them has -1 coefficient with d, and those correspond to the very last column
-    lp_leq_matrix[:, -1] = -np.ones(n)
+    lp_leq_matrix[:, -1] = -np.ones(n, dtype=LP_T_)
     # Other coefficients are chi(i, j, a)
     for i in range(n):
         for a in range(A):
@@ -144,7 +102,15 @@ def solve_lp_problem_relax(P, Q, alphabet, m, n, original_strings, subset_string
 
 
     # Now we just plug it into scipy's solver
-    lp_solution = linprog(c, A_ub=lp_leq_matrix, b_ub=lp_leq_b, A_eq=lp_eq_matrix, b_eq=lp_eq_b, bounds=list(zip(lower_bounds, upper_bounds)))
+    sout, serr = sys.stdout, sys.stderr
+    sys.stdout, sys.stderr = None, None
+    lp_solution = linprog(c,
+                          A_ub=lp_leq_matrix,
+                          b_ub=lp_leq_b,
+                          A_eq=lp_eq_matrix,
+                          b_eq=lp_eq_b,
+                          bounds=list(zip(lower_bounds, upper_bounds)))
+    sys.stdout, sys.stderr = sout, serr
 
 
     if not lp_solution.success:
@@ -153,11 +119,6 @@ def solve_lp_problem_relax(P, Q, alphabet, m, n, original_strings, subset_string
     # print(lp_solution)
     s_prime = reconstruct_solution(m, Q, A, subset_strings, lp_solution.x, alphabet)
     return s_prime
-
-
-
-
-
 
 class LiMaWangPTASSolver(AbstractSolver):
     def __init__(self, **kwargs):
@@ -179,10 +140,11 @@ class LiMaWangPTASSolver(AbstractSolver):
         best_string = None
         best_score = m
 
-        for subset_index_list in tqdm(combinations(range(n), r)):
+        for subset_index_list in combinations(range(n), r):
             subset_strings = [original_string_set[i] for i in subset_index_list]
             Q = same_idx_list(subset_strings)
             P = [j for j in range(m) if j not in Q]
+            # P = diff_idx_list(subset_strings)
 
             s_p = solve_lp_problem_relax(P, Q, alphabet, m, n, original_string_set, subset_strings)
             if s_p is None:
