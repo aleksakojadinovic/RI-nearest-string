@@ -210,7 +210,7 @@ class AbstractSolver:
 
     def run_and_time(self, problem: CSProblem) -> dict:
         start_time = time.time()
-        solution = self.solve_(problem)
+        solution = self.solve(problem)
         end_time = time.time()
 
         if problem.expect is not None:

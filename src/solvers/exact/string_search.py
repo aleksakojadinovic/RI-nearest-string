@@ -70,6 +70,4 @@ class StringSearchSolver(AbstractSolver):
 
     def solve_(self, problem: CSProblem) -> CSSolution:
         sol, score = optimize_string_search(problem)
-        if sol is None:
-            raise ValueError(f'Nesto ne valja u algoritmu :D')
         return CSSolution(sol, score)
