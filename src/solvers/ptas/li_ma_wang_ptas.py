@@ -102,15 +102,15 @@ def solve_lp_problem_relax(P, Q, alphabet, m, n, original_strings, subset_string
 
 
     # Now we just plug it into scipy's solver
-    sout, serr = sys.stdout, sys.stderr
-    sys.stdout, sys.stderr = None, None
+    # sout, serr = sys.stdout, sys.stderr
+    # sys.stdout, sys.stderr = None, None
     lp_solution = linprog(c,
                           A_ub=lp_leq_matrix,
                           b_ub=lp_leq_b,
                           A_eq=lp_eq_matrix,
                           b_eq=lp_eq_b,
                           bounds=list(zip(lower_bounds, upper_bounds)))
-    sys.stdout, sys.stderr = sout, serr
+    # sys.stdout, sys.stderr = sout, serr
 
 
     if not lp_solution.success:
@@ -119,6 +119,22 @@ def solve_lp_problem_relax(P, Q, alphabet, m, n, original_strings, subset_string
     # print(lp_solution)
     s_prime = reconstruct_solution(m, Q, A, subset_strings, lp_solution.x, alphabet)
     return s_prime
+
+def handle_subset():
+    pass
+
+MAX_WORKERS_ = 128
+
+def subset_processor_(my_idx, original_string_set, subset_index_list, alphabet, m, n, ALL_RESULTS):
+    subset_strings = [original_string_set[i] for i in subset_index_list]
+    Q = same_idx_list(subset_strings)
+    P = [j for j in range(m) if j not in Q]
+    s_p = solve_lp_problem_relax(P, Q, alphabet, m, n, original_string_set, subset_strings)
+    if s_p is None:
+        return
+    s_p_metric = utils.problem_metric(s_p, original_string_set)
+    ALL_RESULTS[my_idx] = (s_p, s_p_metric)
+
 
 class LiMaWangPTASSolver(AbstractSolver):
     def __init__(self, **kwargs):
@@ -137,39 +153,37 @@ class LiMaWangPTASSolver(AbstractSolver):
         n = problem.n
 
         r = self.config['r']
-        best_string = None
-        best_score = m
 
-        for subset_index_list in combinations(range(n), r):
-            subset_strings = [original_string_set[i] for i in subset_index_list]
-            Q = same_idx_list(subset_strings)
-            P = [j for j in range(m) if j not in Q]
-            # P = diff_idx_list(subset_strings)
+        total_iters = math.factorial(n) // math.factorial(r) // math.factorial(n - r)
+        max_workers = min(MAX_WORKERS_, total_iters)
+        CANDIDATES = [(None, None) for _ in range(total_iters)]
 
-            s_p = solve_lp_problem_relax(P, Q, alphabet, m, n, original_string_set, subset_strings)
-            if s_p is None:
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            print(f'Scheduling tasks...', file=sys.stderr)
+            for i, subset_index_list in tqdm(enumerate(combinations(range(n), r)), total=total_iters):
+                executor.submit(subset_processor_, i, original_string_set, subset_index_list, alphabet, m, n, CANDIDATES)
+
+
+        best_non_trivial_string, best_non_trivial_score = None, m
+        for c, s in CANDIDATES:
+            if c is None:
                 continue
-            s_p_metric = utils.problem_metric(s_p, original_string_set)
-            if s_p_metric <= best_score:
-                best_score = s_p_metric
-                best_string = s_p
-
-        # print(f'Best LP sol: {best_score}')
+            if s <= best_non_trivial_score:
+                best_non_trivial_score = s
+                best_non_trivial_string = c
 
 
-        best_trivial = None
-        best_trivial_score = m
+        best_trivial_string, best_trivial_score = None, m
         for s in problem.strings:
             met = utils.problem_metric(s, problem.strings)
             if met <= best_trivial_score:
                 best_trivial_score = met
-                best_trivial = s
-        # print(f'Best trivial sol: {best_score}')
+                best_trivial_string = s
 
-        if best_score is None:
-            return CSSolution(best_trivial, best_trivial_score)
+        if best_non_trivial_string is None:
+            return CSSolution(best_trivial_string, best_trivial_score)
 
-        if best_score < best_trivial_score:
-            return CSSolution(best_string, best_score)
+        if best_non_trivial_score < best_trivial_score:
+            return CSSolution(best_non_trivial_string, best_non_trivial_score)
 
-        return CSSolution(best_trivial, best_trivial_score)
+        return CSSolution(best_trivial_string, best_trivial_score)

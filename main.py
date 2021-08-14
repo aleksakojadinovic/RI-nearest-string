@@ -21,38 +21,40 @@ import pandas as pd
 import cProfile
 
 if __name__ == '__main__':
-    # sols_path = 'results_csp_rnd.csv'
-    #
-    # loader = CSPLoader('../results_csp_rnd.csv')
-    # problem = loader.load_csp('csps/2-10-250-1-0.csp')
-    #
-    #
-    # # problem = CSProblem.from_file('examples/example3.txt')
-    #
-    # # print(StringSearchSolver().solve(problem).measure)
-    #
+    sols_path = 'results_csp_rnd.csv'
+
+    loader = CSPLoader('../results_csp_rnd.csv')
+    problem = loader.load_csp('csps/2-10-250-1-0.csp')
+
+
+    # problem = CSProblem.from_file('examples/example3.txt')
+
+    # print(StringSearchSolver().solve(problem).measure)
+
     # profile = cProfile.Profile()
     # profile.enable()
-    #
-    # lmw = LiMaWangPTASSolver()
-    # r = 2
-    # lmw.edit_conf('r', 2)
-    # s = lmw.run_and_time(problem)
+
+    lmw = LiMaWangPTASSolver()
+    r = 2
+    lmw.edit_conf('r', 2)
+    s = lmw.run_and_time(problem)
     # profile.disable()
     # profile.dump_stats('profile_out.prof')
-    # stream = open('profile_out.txt', 'w')
-    # stats = pstats.Stats('profile_out.prof', stream=stream)
-    # stats.sort_stats('cumtime')
+    stream = open('profile_out.txt', 'w')
+    stats = pstats.Stats('profile_out.prof', stream=stream)
+    stats.sort_stats('cumtime')
     # stats.print_stats()
+
+    print(f'Total time: {s["elapsed"]}')
+
+    # def task(i):
+    #     time.sleep(2)
+    #     print(f'task {i}')
     #
-    # print(f'Total time: {s["elapsed"]}')
-
-    def task(i):
-        time.sleep(2)
-        print(f'task {i}')
-
-    with ThreadPoolExecutor(max_workers=2) as tpe:
-        tpe.submit(task, 5)
+    # with ThreadPoolExecutor(max_workers=128) as tpe:
+    #     for i in range(5):
+    #         tpe.submit(task, i)
+    #         print(f'Task {i} submitted')
 
 
 
