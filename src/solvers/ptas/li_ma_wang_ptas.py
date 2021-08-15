@@ -10,6 +10,7 @@ from abstractions import AbstractSolver, CSProblem, CSSolution
 from scipy.optimize import linprog
 
 from concurrent.futures import ThreadPoolExecutor
+from threading import Thread
 
 def same_idx_list(strs):
     if not strs:
@@ -125,6 +126,8 @@ def handle_subset():
 
 MAX_WORKERS_ = 128
 
+
+
 def subset_processor_(my_idx, original_string_set, subset_index_list, alphabet, m, n, ALL_RESULTS):
     subset_strings = [original_string_set[i] for i in subset_index_list]
     Q = same_idx_list(subset_strings)
@@ -134,7 +137,6 @@ def subset_processor_(my_idx, original_string_set, subset_index_list, alphabet, 
         return
     s_p_metric = utils.problem_metric(s_p, original_string_set)
     ALL_RESULTS[my_idx] = (s_p, s_p_metric)
-
 
 class LiMaWangPTASSolver(AbstractSolver):
     def __init__(self, **kwargs):
@@ -157,11 +159,19 @@ class LiMaWangPTASSolver(AbstractSolver):
         total_iters = math.factorial(n) // math.factorial(r) // math.factorial(n - r)
         max_workers = min(MAX_WORKERS_, total_iters)
         CANDIDATES = [(None, None) for _ in range(total_iters)]
-
+        # print(f'MAX WORKERS: {max_workers}')
         with ThreadPoolExecutor(max_workers=max_workers) as executor:
             print(f'Scheduling tasks...', file=sys.stderr)
             for i, subset_index_list in tqdm(enumerate(combinations(range(n), r)), total=total_iters):
                 executor.submit(subset_processor_, i, original_string_set, subset_index_list, alphabet, m, n, CANDIDATES)
+        # threads = [None for _ in range(total_iters)]
+        # for i, subset_index_list in tqdm(enumerate(combinations(range(n), r)), total=total_iters):
+        #     threads[i] = Thread(target=subset_processor_, args=(i, original_string_set, subset_index_list, alphabet, m, n, CANDIDATES))
+        #     threads[i].start()
+        #
+        # for t in threads:
+        #     t.join()
+
 
 
         best_non_trivial_string, best_non_trivial_score = None, m

@@ -42,7 +42,7 @@ class AntColonySolver(AbstractSolver):
         world_trails = [[init_pher for _ in range(A)] for _ in range(m)]
         trail_row_wise_sums = [1.0 for _ in range(m)]
 
-        for iteration in tqdm(range(miters)):
+        for iteration in range(miters):
 
             local_best_ant = None
             local_best_metric = m
