@@ -21,7 +21,7 @@ class LiMaWangPTASSolver(AbstractSolver):
         return 'PTAS1'
 
     def get_default_config(self) -> dict:
-        return {'r': 2}
+        return {'r': 4}
 
     def solve_(self, problem: CSProblem) -> CSSolution:
         original_string_set = problem.strings
@@ -67,9 +67,9 @@ class LiMaWangPTASSolver(AbstractSolver):
                 best_trivial_string = s
 
         if best_non_trivial_string is None:
-            return CSSolution(best_trivial_string, best_trivial_score)
+            return CSSolution(best_trivial_string, best_trivial_score, problem)
 
         if best_non_trivial_score < best_trivial_score:
-            return CSSolution(best_non_trivial_string, best_non_trivial_score, extra={'times_lp': times_lp, 'times_force': times_force})
+            return CSSolution(best_non_trivial_string, best_non_trivial_score, problem, extra={'times_lp': times_lp, 'times_force': times_force})
 
-        return CSSolution(best_trivial_string, best_trivial_score, extra={'times_lp': times_lp, 'times_force': times_force})
+        return CSSolution(best_trivial_string, best_trivial_score, problem, extra={'times_lp': times_lp, 'times_force': times_force})

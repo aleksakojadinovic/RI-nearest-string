@@ -76,4 +76,4 @@ class LuiEtAlGeneticSolver(AbstractSolver):
 
         best_unit, best_unit_metric = min(zip(population, fitnesses), key=lambda x: x[1])
 
-        return CSSolution(best_unit, best_unit_metric)
+        return CSSolution(best_unit, best_unit_metric, problem)

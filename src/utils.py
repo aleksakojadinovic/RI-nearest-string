@@ -2,10 +2,10 @@ def sat(s, I):
     return ''.join(c for i, c in enumerate(s) if i in I)
 
 def Q(s1, s2):
-    return [i for i, (c1, c2) in enumerate(zip(s1, s2)) if c1 == 2]
+    return [i for i, (c1, c2) in enumerate(zip(s1, s2)) if c1 == c2]
 
 def P(s1, s2):
-    return [i for i, (c1, c2) in enumerate(zip(s1, s2)) if c1 != 2]
+    return [i for i, (c1, c2) in enumerate(zip(s1, s2)) if c1 != c2]
 
 def Q_all(strings):
     if not strings:

@@ -21,7 +21,7 @@ class SimplePTASSolver(AbstractSolver):
     def get_default_config(self) -> dict:
         return {
             'epsilon': 0.8,
-            'sigma': 2
+            'sigma': 1.1
         }
 
     def solve_(self, problem: CSProblem) -> CSSolution:
@@ -41,19 +41,27 @@ class SimplePTASSolver(AbstractSolver):
 
         solve_func = solve_by_lp_relaxation
         lp_used = True
-        if k <= (6*math.log2(sigma*m)) // epsilon:
+
+        decision_measure = (6*math.log2(sigma*m)) // (epsilon**2)
+        print(f'k = {k}')
+        print(f'dec = {decision_measure}')
+
+        if k <= decision_measure:
+            print(f'Choosing force...')
             solve_func = solve_by_force
             lp_used = False
+        else:
+            print(f'Choosing lp...')
 
         ss = solve_func(P, Q, alphabet, m, n, strings, si)
         if ss is None:
-            return CSSolution(si, k, extra={'lp_used': lp_used, 'orig': True})
+            return CSSolution(si, k, problem, extra={'lp_used': lp_used, 'orig': True})
 
         new_sol, new_sol_metric = ss
 
         if new_sol_metric < k:
-            return CSSolution(new_sol, new_sol_metric, extra={'lp_used': lp_used, 'orig': False})
-        return CSSolution(si, k, extra={'lp_used': lp_used, 'orig': True})
+            return CSSolution(new_sol, new_sol_metric, problem, extra={'lp_used': lp_used, 'orig': False})
+        return CSSolution(si, k, problem, extra={'lp_used': lp_used, 'orig': True})
 
 
 

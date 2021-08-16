@@ -102,4 +102,4 @@ def solve_by_lp_relaxation(P, Q, alphabet, m, n, original_strings, primary_refer
 
     # print(lp_solution)
     s_prime = reconstruct_solution(m, Q, primary_reference_string, lp_solution.x, alphabet)
-    return s_prime
+    return s_prime, utils.problem_metric(s_prime, original_strings)

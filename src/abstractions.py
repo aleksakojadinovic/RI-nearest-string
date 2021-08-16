@@ -145,31 +145,29 @@ class CSPLoader:
 
 
 class CSSolution:
-    def __init__(self, solution: str, measure: int, extra: any = None, problem: CSProblem = None) -> None:
+    def __init__(self, solution: str, measure: int, problem: CSProblem, extra: any = None) -> None:
         self.solution = solution
         self.measure = measure
         self.extra = extra if extra is not None else dict()
         self.problem = problem
-        if problem is None or problem.expect is None:
-            self.correct = None
-        else:
-            self.correct = self.measure == problem.expect
+        self.quality = (problem.m - self.measure) / problem.m
+        self.objective_quality = None
 
-    def as_dict(self) -> dict[str, int]:
-        return {'solution': self.solution, 'measure': self.measure, 'extra': self.extra, 'correct': self.correct}
 
     def compare_with_ref_(self, expected_value):
-        self.correct = expected_value == self.measure
+        self.objective_quality = expected_value / self.measure
 
     def __str__(self) -> str:
         lines = []
         lines.append('--CS Solution--')
         lines.append(f'\tString: {self.solution}')
         lines.append(f'\tScore: {self.measure}')
+        lines.append(f'\tQuality: {self.quality}')
+        lines.append(f'\tObjective quality: {self.objective_quality}')
         lines.append('\tExtra:')
         for e in self.extra:
             lines.append(f'\t\t{e}: {self.extra[e]}')
-        lines.append(f'Correct: {self.correct if self.correct is not None else "Unknown"}')
+
 
         return '\r\n'.join(lines)
 

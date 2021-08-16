@@ -25,7 +25,7 @@ if __name__ == '__main__':
     sols_path = 'results_csp_rnd.csv'
 
     loader = CSPLoader('../results_csp_rnd.csv')
-    problem = loader.load_csp('csps/4-10-250-1-5.csp')
+    problem = loader.load_csp('csps/2-10-250-2-7.csp')
 
 
     # problem = CSProblem.from_file('examples/example3.txt')
@@ -39,10 +39,8 @@ if __name__ == '__main__':
 
     solver = LiMaWangPTASSolver()
     s = solver.run_and_time(problem)
-    print(f'LM time: {s["elapsed"]}s')
-    print(f'LM metric:  {s["solution"].measure}')
-    print(f'LM string:  {s["solution"].solution}')
-    print(f'Extra: {s["solution"].extra}')
+    print(s["elapsed"])
+    print(s["solution"])
 
 
     print(utils.problem_metric(s["solution"].solution, problem.strings))

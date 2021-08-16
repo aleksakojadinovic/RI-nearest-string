@@ -39,4 +39,4 @@ class PruningSolver(AbstractSolver):
                 continue
             q += [curr_string + next_letter for next_letter in alphabet]
 
-        return CSSolution(min_string, min_hamming, {'iterations': iterations, 'pruned': pruned})
+        return CSSolution(min_string, min_hamming, problem, {'iterations': iterations, 'pruned': pruned})

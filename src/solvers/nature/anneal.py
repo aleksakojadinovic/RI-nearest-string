@@ -41,4 +41,4 @@ class SimulatedAnnealingSolver(AbstractSolver):
                     u_metric = u_prime_metric
             T *= gamma
 
-        return CSSolution(u, u_metric)
+        return CSSolution(u, u_metric, problem)

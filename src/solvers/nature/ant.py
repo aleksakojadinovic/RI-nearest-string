@@ -71,7 +71,7 @@ class AntColonySolver(AbstractSolver):
                 global_best_ant = local_best_ant
 
             trail_row_wise_sums = [sum(world_trails[i]) for i in range(m)]
-        return CSSolution(global_best_ant, global_best_metric)
+        return CSSolution(global_best_ant, global_best_metric, problem)
 
 
 
