@@ -1,8 +1,18 @@
+import math
+
 from scipy.optimize import linprog
 
 import utils
 from abstractions import AbstractSolver, CSProblem, CSSolution
+from solvers.exact.pruning_search import PruningSolver
+from itertools import combinations
 
+from solvers.ptas.lp.enumeration_solver import solve_by_force
+from solvers.ptas.lp.lp_relaxation_solver import solve_by_lp_relaxation
+
+
+def yank(s, I):
+    return ''.join(c for i, c in enumerate(s) if i in I)
 
 class SimplePTASSolver(AbstractSolver):
     def name(self) -> str:
@@ -10,39 +20,42 @@ class SimplePTASSolver(AbstractSolver):
 
     def get_default_config(self) -> dict:
         return {
-            'epsilon': 1,
-            'sigma': 1
+            'epsilon': 0.8,
+            'sigma': 2
         }
 
     def solve_(self, problem: CSProblem) -> CSSolution:
         m, n, strings, alphabet = problem.m, problem.n, problem.strings, problem.alphabet
 
-        i_cap = None
-        j_cap = None
-        max_dist = 0
-        for i in range(n):
-            for j in range(n):
-                dist = utils.hamming_distance(strings[i], strings[j])
-                if dist >= max_dist:
-                    max_dist = dist
-                    i_cap = i
-                    j_cap = j
 
-        if max_dist == 0:
-            # Max distance between any pair of the input strings is zero,
-            # perfect solution (never gonna happen but gotta handle it)
-            return CSSolution(strings[0], 0)
+        i, j = max(combinations(range(n), 2), key=lambda coords: utils.hamming_distance(strings[coords[0]], strings[coords[1]]))
 
-        si = strings[i_cap]
-        sj = strings[j_cap]
-        P = [j for j, (c1, c2) in enumerate(zip(si, sj)) if c1 != c2]
-        Q = [j for j, (c1, c2) in enumerate(zip(si, sj)) if c1 == c2]
+        si = strings[i]
+        sj = strings[j]
+        P = utils.P(si, sj)
+        Q = utils.Q(si, sj)
 
         k = len(P) # Number of positions that they disagree on
+        epsilon = self.config['epsilon']
+        sigma   = self.config['sigma']
 
-        # We optimize on the disagreeing positions (those in P)
-        # min d
-        # d(s)
+        solve_func = solve_by_lp_relaxation
+        lp_used = True
+        if k <= (6*math.log2(sigma*m)) // epsilon:
+            solve_func = solve_by_force
+            lp_used = False
+
+        ss = solve_func(P, Q, alphabet, m, n, strings, si)
+        if ss is None:
+            return CSSolution(si, k, extra={'lp_used': lp_used, 'orig': True})
+
+        new_sol, new_sol_metric = ss
+
+        if new_sol_metric < k:
+            return CSSolution(new_sol, new_sol_metric, extra={'lp_used': lp_used, 'orig': False})
+        return CSSolution(si, k, extra={'lp_used': lp_used, 'orig': True})
+
+
 
 
 

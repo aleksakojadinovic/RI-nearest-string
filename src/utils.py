@@ -1,38 +1,35 @@
-import distance
+def sat(s, I):
+    return ''.join(c for i, c in enumerate(s) if i in I)
 
-class ystr(str):
-    def __or__(self, index_list):
-        return ystr(''.join(c for i, c in enumerate(str(self)) if i in index_list))
+def Q(s1, s2):
+    return [i for i, (c1, c2) in enumerate(zip(s1, s2)) if c1 == 2]
 
-    def set_char(self, index, char):
-        s = str(self)
-        return ystr(s[:index] + char + s[index + 1:])
+def P(s1, s2):
+    return [i for i, (c1, c2) in enumerate(zip(s1, s2)) if c1 != 2]
 
-    def diff_idx(self, other):
-        return [i for i, (c1, c2) in enumerate(zip(self, other)) if c1 != c2]
+def Q_all(strings):
+    if not strings:
+        return []
+    ref = strings[0]
+    return [i for i in range(len(ref)) if all((s[i] == ref[i] for s in strings))]
 
-    def same_idx(self, other):
-        return [i for i, (c1, c2) in enumerate(zip(self, other)) if c1 == c2]
+
 
 def hamming_distance(s1, s2):
     return sum(c1 != c2 for c1, c2 in zip(s1, s2))
 
-
-def hamming_distance_is(s1, s2, P):
-    return sum(s1[i] != s2[i] for i in P)
-
-def hamming_distance2(s1, s2):
-    d = 0
-    for i in range(len(s1)):
+def hamming_at(s1, s2, I):
+    h = 0
+    for i in I:
         if s1[i] != s2[i]:
-            d += 1
-    return d
+            h += 1
+    return h
 
 def problem_metric(string, references):
     return max(hamming_distance(string, r) for r in references)
 
-def problem_metric2(string, references):
-    return max(hamming_distance2(string, r) for r in references)
+def problem_metric_at(string, references, I):
+    return max(hamming_at(string, r, I) for r in references)
 
 # Returns the alphabet for a given string
 def get_alphabet(s):
