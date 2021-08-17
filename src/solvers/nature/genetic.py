@@ -1,4 +1,5 @@
 import random
+from typing import Tuple
 
 import utils
 from abstractions import AbstractSolver, CSProblem, CSSolution
@@ -33,7 +34,7 @@ class LuiEtAlGeneticSolver(AbstractSolver):
             'TOURNAMENT_SIZE': 3
         }
 
-    def solve_(self, problem: CSProblem) -> CSSolution:
+    def solve_(self, problem: CSProblem) -> Tuple[str, dict]:
         m, n, alphabet, strings = problem.m, problem.n, problem.alphabet, problem.strings
         miters, pop_size, mutation_rate = self.config['MAX_ITERS'], self.config['POP_SIZE'], self.config['MUTATION_RATE']
 
@@ -76,4 +77,4 @@ class LuiEtAlGeneticSolver(AbstractSolver):
 
         best_unit, best_unit_metric = min(zip(population, fitnesses), key=lambda x: x[1])
 
-        return CSSolution(best_unit, best_unit_metric, problem)
+        return best_unit, {}

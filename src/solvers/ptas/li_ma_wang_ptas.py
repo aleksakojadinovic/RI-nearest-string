@@ -1,7 +1,7 @@
 import math
 import random
 import sys
-from typing import List
+from typing import List, Tuple
 import numpy as np
 from itertools import combinations
 from tqdm import tqdm
@@ -23,7 +23,7 @@ class LiMaWangPTASSolver(AbstractSolver):
     def get_default_config(self) -> dict:
         return {'r': 4}
 
-    def solve_(self, problem: CSProblem) -> CSSolution:
+    def solve_(self, problem: CSProblem) -> Tuple[str, dict]:
         original_string_set = problem.strings
         alphabet = problem.alphabet
         m = problem.m
@@ -51,10 +51,10 @@ class LiMaWangPTASSolver(AbstractSolver):
             else:
                 solve_func = solve_by_lp_relaxation
                 times_lp += 1
-            s_p = solve_func(P, Q, alphabet, m, n, original_string_set, subset_strings[0])
-            if s_p is None:
+            ss = solve_func(P, Q, alphabet, m, n, original_string_set, subset_strings[0])
+            if ss is None:
                 continue
-            s_p_metric = utils.problem_metric(s_p, original_string_set)
+            s_p, s_p_metric = ss
             if s_p_metric <= best_non_trivial_score:
                 best_non_trivial_score = s_p_metric
                 best_non_trivial_string = s_p
@@ -67,9 +67,9 @@ class LiMaWangPTASSolver(AbstractSolver):
                 best_trivial_string = s
 
         if best_non_trivial_string is None:
-            return CSSolution(best_trivial_string, best_trivial_score, problem)
+            return best_trivial_string, {'trivial': True}
 
         if best_non_trivial_score < best_trivial_score:
-            return CSSolution(best_non_trivial_string, best_non_trivial_score, problem, extra={'times_lp': times_lp, 'times_force': times_force})
+            return best_non_trivial_string, {'times_lp': times_lp, 'times_force': times_force}
 
-        return CSSolution(best_trivial_string, best_trivial_score, problem, extra={'times_lp': times_lp, 'times_force': times_force})
+        return best_trivial_string, {'trivial': True}

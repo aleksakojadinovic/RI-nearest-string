@@ -1,3 +1,5 @@
+from typing import Tuple
+
 from abstractions import AbstractSolver, CSProblem, CSSolution
 from utils import problem_metric
 
@@ -11,7 +13,7 @@ class PruningSolver(AbstractSolver):
     def name(self) -> str:
         return 'DFS Solver with Pruning'
 
-    def solve_(self, problem: CSProblem) -> CSSolution:
+    def solve_(self, problem: CSProblem) -> Tuple[str, dict]:
         m = problem.m
         alphabet = problem.alphabet
         strings = problem.strings
@@ -39,4 +41,4 @@ class PruningSolver(AbstractSolver):
                 continue
             q += [curr_string + next_letter for next_letter in alphabet]
 
-        return CSSolution(min_string, min_hamming, problem, {'iterations': iterations, 'pruned': pruned})
+        return min_string, {'iterations': iterations, 'pruned': pruned}

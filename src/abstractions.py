@@ -1,7 +1,9 @@
 import time
 import os
+
+import utils
 import utils as ut
-from typing import List
+from typing import List, Tuple
 
 
 class CSProblem:
@@ -145,36 +147,32 @@ class CSPLoader:
 
 
 class CSSolution:
-    def __init__(self, solution: str, measure: int, problem: CSProblem, extra: any = None) -> None:
+    def __init__(self, solution: str, elapsed, problem: CSProblem, extra: any = None) -> None:
         self.solution = solution
-        self.measure = measure
-        self.extra = extra if extra is not None else dict()
+        self.measure = utils.problem_metric(solution, problem.strings)
+        self.extra = extra
         self.problem = problem
         self.quality = (problem.m - self.measure) / problem.m
         self.objective_quality = None
+        self.elapsed = elapsed
 
-
-    def compare_with_ref_(self, expected_value):
-        self.objective_quality = expected_value / self.measure
+        if problem.expect is not None:
+            self.objective_quality = problem.expect / self.measure
 
     def __str__(self) -> str:
         lines = []
         lines.append('--CS Solution--')
+        lines.append(f'\tTime: {self.elapsed}s')
         lines.append(f'\tString: {self.solution}')
         lines.append(f'\tScore: {self.measure}')
         lines.append(f'\tQuality: {self.quality}')
-        lines.append(f'\tObjective quality: {self.objective_quality}')
-        lines.append('\tExtra:')
-        for e in self.extra:
-            lines.append(f'\t\t{e}: {self.extra[e]}')
-
+        lines.append(f'\tObjective quality: {"Unknown" if self.objective_quality is None else self.objective_quality}')
+        if self.extra is not None:
+            lines.append('\tExtra:')
+            for e in self.extra:
+                lines.append(f'\t\t{e}: {self.extra[e]}')
 
         return '\r\n'.join(lines)
-
-    def __eq__(self, o: object) -> bool:
-        if not isinstance(o, CSSolution):
-            return False
-        return self.measure == o.measure
 
 
 class AbstractSolver:
@@ -197,28 +195,13 @@ class AbstractSolver:
         self.config[k] = v
         return self
 
-    def solve_(self, problem: CSProblem) -> CSSolution:
+    def solve_(self, problem: CSProblem) -> Tuple[str, dict]:
         raise NotImplementedError
 
-    def solve(self, problem: CSProblem) -> CSSolution:
-        sol = self.solve_(problem)
-        if problem.expect is not None:
-            sol.compare_with_ref_(problem.expect)
-        return sol
-
-    def run_and_time(self, problem: CSProblem) -> dict:
+    def run_and_time(self, problem: CSProblem) -> CSSolution:
         start_time = time.time()
-        solution = self.solve(problem)
+        solution, extra = self.solve_(problem)
         end_time = time.time()
-
-        if problem.expect is not None:
-            solution.compare_with_ref_(problem.expect)
-
-        return {
-            'solution': solution,
-            'start_time': start_time,
-            'end_time': end_time,
-            'elapsed': (end_time - start_time)
-        }
-
+        cssol = CSSolution(solution, end_time - start_time, problem, extra)
+        return cssol
 

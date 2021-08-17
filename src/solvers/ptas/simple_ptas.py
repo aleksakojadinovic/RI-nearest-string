@@ -1,4 +1,5 @@
 import math
+from typing import Tuple
 
 from scipy.optimize import linprog
 
@@ -24,7 +25,7 @@ class SimplePTASSolver(AbstractSolver):
             'sigma': 1.1
         }
 
-    def solve_(self, problem: CSProblem) -> CSSolution:
+    def solve_(self, problem: CSProblem) -> Tuple[str, dict]:
         m, n, strings, alphabet = problem.m, problem.n, problem.strings, problem.alphabet
 
 
@@ -55,13 +56,13 @@ class SimplePTASSolver(AbstractSolver):
 
         ss = solve_func(P, Q, alphabet, m, n, strings, si)
         if ss is None:
-            return CSSolution(si, k, problem, extra={'lp_used': lp_used, 'orig': True})
+            return si, {'lp_used': lp_used, 'orig': True}
 
         new_sol, new_sol_metric = ss
 
         if new_sol_metric < k:
-            return CSSolution(new_sol, new_sol_metric, problem, extra={'lp_used': lp_used, 'orig': False})
-        return CSSolution(si, k, problem, extra={'lp_used': lp_used, 'orig': True})
+            return new_sol, {'lp_used': lp_used, 'orig': False}
+        return si, {'lp_used': lp_used, 'orig': True}
 
 
 

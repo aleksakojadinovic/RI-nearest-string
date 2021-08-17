@@ -9,7 +9,8 @@ from tqdm import tqdm
 import utils
 from abstractions import CSProblem, CSPLoader, CSSolution
 from generators.random_generator import generate_solvable_problem, random_alphabet, random_problem
-from solvers.nature.anneal import SimulatedAnnealingSolver
+from solvers.exact.brute_force_search import BruteForceSolver
+from solvers.exact.lex_search import LexSearchSolver
 from solvers.nature.ant import AntColonySolver
 from solvers.nature.genetic import LuiEtAlGeneticSolver
 from solvers.exact.pruning_search import PruningSolver
@@ -24,26 +25,21 @@ import cProfile
 if __name__ == '__main__':
     sols_path = 'results_csp_rnd.csv'
 
-    loader = CSPLoader('../results_csp_rnd.csv')
-    problem = loader.load_csp('csps/2-10-250-2-7.csp')
-
-
-    # problem = CSProblem.from_file('examples/example3.txt')
-
-    # print(StringSearchSolver().solve(problem).measure)
-
-    # profile = cProfile.Profile()
-    # profile.enable()
+    # loader = CSPLoader('../results_csp_rnd.csv')
+    # problem = loader.load_csp('csps/2-10-250-2-7.csp')
 
 
 
-    solver = LiMaWangPTASSolver()
-    s = solver.run_and_time(problem)
-    print(s["elapsed"])
-    print(s["solution"])
+    problem = CSProblem.from_file('examples/example2.txt')
+    print(problem)
 
 
-    print(utils.problem_metric(s["solution"].solution, problem.strings))
+
+
+
+
+
+    # print(utils.problem_metric(s["solution"].solution, problem.strings))
 
 
 

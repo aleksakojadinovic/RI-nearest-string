@@ -1,4 +1,6 @@
 import random
+from typing import Tuple
+
 import utils
 from abstractions import AbstractSolver, CSProblem, CSSolution
 from tqdm import tqdm
@@ -29,7 +31,7 @@ class AntColonySolver(AbstractSolver):
             'RHO': 0.1
         }
 
-    def solve_(self, problem: CSProblem) -> CSSolution:
+    def solve_(self, problem: CSProblem) -> Tuple[str, dict]:
         m, n, alphabet, strings = problem.m, problem.n, problem.alphabet, problem.strings
         A = len(alphabet)
         rho = self.config['RHO']
@@ -71,7 +73,7 @@ class AntColonySolver(AbstractSolver):
                 global_best_ant = local_best_ant
 
             trail_row_wise_sums = [sum(world_trails[i]) for i in range(m)]
-        return CSSolution(global_best_ant, global_best_metric, problem)
+        return global_best_ant, {}
 
 
 

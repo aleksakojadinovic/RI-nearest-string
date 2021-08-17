@@ -16,6 +16,8 @@ def partial_hamming_at_(s1, s2, I, upto):
 def partial_metric_at(s, references, I, upto):
     return max(partial_hamming_at_(s, r, I, upto) for r in references)
 
+
+
 def solve_by_force(P, Q, alphabet, m, n, original_strings, primary_reference_string):
     nP = len(P)
 
