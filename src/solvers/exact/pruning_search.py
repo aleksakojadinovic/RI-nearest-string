@@ -42,3 +42,4 @@ class PruningSolver(AbstractSolver):
             q += [curr_string + next_letter for next_letter in alphabet]
 
         return min_string, {'iterations': iterations, 'pruned': pruned}
+

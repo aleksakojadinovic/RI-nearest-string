@@ -25,13 +25,22 @@ import cProfile
 if __name__ == '__main__':
     sols_path = 'results_csp_rnd.csv'
 
-    # loader = CSPLoader('../results_csp_rnd.csv')
+    loader = CSPLoader('../results_csp_rnd.csv')
     # problem = loader.load_csp('csps/2-10-250-2-7.csp')
 
 
 
-    problem = CSProblem.from_file('examples/example2.txt')
+    problem = CSProblem.from_file('examples/example1.txt')
     print(problem)
+
+    t1 = BruteForceSolver().run_and_time(problem)
+    print('brute:')
+    print(t1)
+
+    t2 = PruningSolver().run_and_time(problem)
+    print('prune:')
+    print(t2)
+
 
 
 
