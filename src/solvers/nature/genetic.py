@@ -22,7 +22,7 @@ def mutate(s, rate, possible_vals):
 
 
 
-class LuiEtAlGeneticSolver(AbstractSolver):
+class GeneticSolver(AbstractSolver):
     def name(self) -> str:
         return 'Genetic algorithm solver (Liu et al.)'
 
@@ -47,7 +47,8 @@ class LuiEtAlGeneticSolver(AbstractSolver):
             # Perform selection
             select_units_indices_ = []
             for _ in range(selection_size):
-                select_units_indices_.append(random.choices(pop_index_list, k=1, weights=fitnesses)[0])
+                # TODO: Weights should actually be m - fitness, this is a mistake
+                select_units_indices_.append(random.choices(pop_index_list, k=1, weights=[m - f for f in fitnesses])[0])
 
             new_units_ = []
             new_units_fitnesses_ = []

@@ -12,7 +12,7 @@ from generators.random_generator import generate_solvable_problem, random_alphab
 from solvers.exact.brute_force_search import BruteForceSolver
 from solvers.exact.lex_search import LexSearchSolver
 from solvers.nature.ant import AntColonySolver
-from solvers.nature.genetic import LuiEtAlGeneticSolver
+from solvers.nature.genetic import GeneticSolver
 from solvers.exact.pruning_search import PruningSolver
 from solvers.ptas.li_ma_wang_ptas import LiMaWangPTASSolver
 from solvers.ptas.simple_ptas import SimplePTASSolver
@@ -26,20 +26,22 @@ if __name__ == '__main__':
     sols_path = 'results_csp_rnd.csv'
 
     loader = CSPLoader('../results_csp_rnd.csv')
-    # problem = loader.load_csp('csps/2-10-250-2-7.csp')
+    problem = loader.load_csp('csps/2-10-250-2-7.csp')
+
+    sg = GeneticSolver().run_and_time(problem)
+    print(sg)
+
+    sa = AntColonySolver().run_and_time(problem)
+    print(sa)
 
 
 
-    problem = CSProblem.from_file('examples/example1.txt')
-    print(problem)
 
-    t1 = BruteForceSolver().run_and_time(problem)
-    print('brute:')
-    print(t1)
 
-    t2 = PruningSolver().run_and_time(problem)
-    print('prune:')
-    print(t2)
+
+    # df_brute = Benchmarker.test_solver_against_problems(brute_solver,
+    #                                                     range(2, 5),
+    #                                                     {'alphabet': ['a', 'c', 't', 'g']})
 
 
 

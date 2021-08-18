@@ -24,8 +24,8 @@ def solve_by_force(P, Q, alphabet, m, n, original_strings, primary_reference_str
     best_score = nP
     best_string = None
     q = [(primary_reference_string, 0)]
-    print(f'Starting force search')
-    print(f'\t WCS leaves {len(alphabet)} ^ {nP}: {len(alphabet)**nP}')
+    # print(f'Starting force search')
+    # print(f'\t WCS leaves {len(alphabet)} ^ {nP}: {len(alphabet)**nP}')
     while q:
         curr_string, curr_p_idx = q.pop()
         curr_string_metric = partial_metric_at(curr_string, original_strings, P, curr_p_idx)
