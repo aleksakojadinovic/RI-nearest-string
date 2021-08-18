@@ -1,4 +1,5 @@
 import random
+import sys
 from typing import Tuple
 
 import utils
@@ -42,13 +43,16 @@ class GeneticSolver(AbstractSolver):
         pop_index_list = list(range(pop_size))
         population = [random_string(alphabet, m) for _ in range(pop_size)]
         fitnesses  = [utils.problem_metric(p, strings) for p in population]
-
+        # print(f'm = {m}', file=sys.stderr)
+        # print(f'fitnesses: {fitnesses}', file=sys.stderr)
         for iteration in range(miters):
             # Perform selection
             select_units_indices_ = []
+            weights = [m - f for f in fitnesses]
+            if all(w == 0 for w in weights):
+                weights = [1 for _ in fitnesses]
             for _ in range(selection_size):
-                # TODO: Weights should actually be m - fitness, this is a mistake
-                select_units_indices_.append(random.choices(pop_index_list, k=1, weights=[m - f for f in fitnesses])[0])
+                select_units_indices_.append(random.choices(pop_index_list, k=1, weights=weights)[0])
 
             new_units_ = []
             new_units_fitnesses_ = []

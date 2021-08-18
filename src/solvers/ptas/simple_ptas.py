@@ -1,4 +1,5 @@
 import math
+import sys
 from typing import Tuple
 
 from scipy.optimize import linprog
@@ -21,8 +22,8 @@ class SimplePTASSolver(AbstractSolver):
 
     def get_default_config(self) -> dict:
         return {
-            'epsilon': 0.8,
-            'sigma': 1.1
+            'epsilon': 1.1,
+            'sigma': 2
         }
 
     def solve_(self, problem: CSProblem) -> Tuple[str, dict]:
@@ -43,22 +44,24 @@ class SimplePTASSolver(AbstractSolver):
         solve_func = solve_by_lp_relaxation
         lp_used = True
 
-        decision_measure = (6*math.log2(sigma*m)) // (epsilon**2)
-        print(f'k = {k}')
-        print(f'dec = {decision_measure}')
+        decision_measure = (6*math.log(sigma*m)) // (epsilon**2)
 
         if k <= decision_measure:
-            print(f'Choosing force...')
             solve_func = solve_by_force
             lp_used = False
-        else:
-            print(f'Choosing lp...')
+
+        # print(f'Decision: |P| = {k}', file=sys.stderr)
+        # print(f'Measure = {decision_measure}', file=sys.stderr)
+        # print(f'Meaning {"FORCE" if not lp_used else "LP"}', file=sys.stderr)
 
         ss = solve_func(P, Q, alphabet, m, n, strings, si)
         if ss is None:
+            # print('not stonks?')
             return si, {'lp_used': lp_used, 'orig': True}
 
         new_sol, new_sol_metric = ss
+
+        # print(f'Found sol: {new_sol}')
 
         if new_sol_metric < k:
             return new_sol, {'lp_used': lp_used, 'orig': False}

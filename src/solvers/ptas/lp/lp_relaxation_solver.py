@@ -34,8 +34,6 @@ def reconstruct_solution(m, Q, primary_reference_string, x_values, alphabet):
 # P - disagreeing positions
 # Q - agreeing positions
 def solve_by_lp_relaxation(P, Q, alphabet, m, n, original_strings, primary_reference_string):
-    if not Q:
-        return None
     LP_T_ = 'float64'
 
     A = len(alphabet)
@@ -98,6 +96,7 @@ def solve_by_lp_relaxation(P, Q, alphabet, m, n, original_strings, primary_refer
 
 
     if not lp_solution.success:
+        print('not stonks')
         return None
 
     # print(lp_solution)

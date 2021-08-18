@@ -26,7 +26,7 @@ class AntColonySolver(AbstractSolver):
 
     def get_default_config(self) -> dict:
         return {
-            'MAX_ITERS': 250,
+            'MAX_ITERS': 500,
             'COLONY_SIZE': 10,
             'RHO': 0.1
         }

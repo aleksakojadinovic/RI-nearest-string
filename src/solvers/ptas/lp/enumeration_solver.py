@@ -1,6 +1,9 @@
 # Optimize on P positions
 # in reference to the original strings
 # keeping other values fixed to that of primary_reference_string
+import sys
+
+
 def replace(s, i, c):
     return s[:i] + c + s[i+1:]
 
@@ -23,9 +26,12 @@ def solve_by_force(P, Q, alphabet, m, n, original_strings, primary_reference_str
 
     best_score = nP
     best_string = None
+
+    print(f'Starting force strategy with the following input:', file=sys.stderr)
+    print(f'\tEnumerate a total of {len(alphabet)**nP} strings')
+
+
     q = [(primary_reference_string, 0)]
-    # print(f'Starting force search')
-    # print(f'\t WCS leaves {len(alphabet)} ^ {nP}: {len(alphabet)**nP}')
     while q:
         curr_string, curr_p_idx = q.pop()
         curr_string_metric = partial_metric_at(curr_string, original_strings, P, curr_p_idx)

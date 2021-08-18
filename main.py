@@ -8,6 +8,7 @@ from tqdm import tqdm
 
 import utils
 from abstractions import CSProblem, CSPLoader, CSSolution
+from generators import random_generator
 from generators.random_generator import generate_solvable_problem, random_alphabet, random_problem
 from solvers.exact.brute_force_search import BruteForceSolver
 from solvers.exact.lex_search import LexSearchSolver
@@ -28,29 +29,20 @@ if __name__ == '__main__':
     loader = CSPLoader('../results_csp_rnd.csv')
     problem = loader.load_csp('csps/2-10-250-2-7.csp')
 
-    sg = GeneticSolver().run_and_time(problem)
-    print(sg)
+    # n_packet = Benchmarker.get_benchmark_packet({'alphabet': ['a', 'c', 't', 'g'], 'm': 20},
+    #                                             target_param_name='n',
+    #                                             target_param_range=[25, 50, 75, 100, 125, 175, 200, 225, 250, 275, 300, 325, 350, 375, 400, 425, 450, 475, 500])
+    #
+    # Benchmarker.save_benchmark_packet(n_packet, 'bps', packet_name_prefix='testing_n')
 
-    sa = AntColonySolver().run_and_time(problem)
-    print(sa)
+    n_packet = Benchmarker.load_benchmark_packet('bps/testing_n_bp_n_25-500')
 
+    df = Benchmarker.test_solver_against_problems(AntColonySolver(), n_packet)
+    df.to_csv('benchmarking_results/testing_n_ants.csv')
+    #
 
-
-
-
-
-    # df_brute = Benchmarker.test_solver_against_problems(brute_solver,
-    #                                                     range(2, 5),
-    #                                                     {'alphabet': ['a', 'c', 't', 'g']})
-
-
-
-
-
-
-
-
-    # print(utils.problem_metric(s["solution"].solution, problem.strings))
+    # nvm = SimplePTASSolver().run_and_time(CSProblem.from_file('bps/testing_n_bp_n_25-500/50.txt'))
+    # print(nvm)
 
 
 

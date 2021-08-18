@@ -1,10 +1,9 @@
-import pandas as pd
+import json
 import sys
-
+import os
+import pandas as pd
 from tqdm import tqdm
-
 import generators.random_generator
-
 from typing import List
 from abstractions import AbstractSolver, CSProblem
 from statistics import stdev, mean
@@ -29,7 +28,7 @@ class Benchmarker:
         results = []
         problem_list, param_range, param_name = packet['problem_list'], packet['target_param_range'], packet['target_param_name']
 
-        for i, p in enumerate(tqdm(problem_list)):
+        for i, p in tqdm(list(enumerate(problem_list))):
             p_results = [solver.run_and_time(p) for _ in range(trials_per_problem)]
             p_times  =  [res.elapsed for res in p_results]
             p_scores =  [res.measure for res in p_results]
@@ -81,6 +80,58 @@ class Benchmarker:
             'target_param_name': target_param_name,
             'target_param_range': target_param_range
         }
+
+
+    @staticmethod
+    def save_benchmark_packet(packet, parent_directory, packet_name=None, packet_name_prefix=None):
+        problem_list,\
+        target_param_name,\
+        target_param_range = packet['problem_list'],\
+                             packet['target_param_name'],\
+                             list(packet['target_param_range'])
+
+        if packet_name is None:
+            prefix = '' if packet_name_prefix is None else packet_name_prefix + '_'
+            packet_name = f'{prefix}bp_{target_param_name}_{target_param_range[0]}-{target_param_range[-1]}'
+
+        if parent_directory not in filter(os.path.isdir, os.listdir(os.getcwd())):
+            os.mkdir(parent_directory)
+
+        os.makedirs(f'{parent_directory}/{packet_name}')
+        for i, p in enumerate(problem_list):
+            problem_marker = target_param_range[i]
+            problem_name = f'{problem_marker}.txt'
+            p.save_to_file(f'{parent_directory}/{packet_name}/{problem_name}')
+
+        other = {'target_param_name': target_param_name,
+                 'target_param_range': target_param_range}
+
+        json.dump(other, open(f'{parent_directory}/{packet_name}/_packet_info.json', 'w'))
+
+    @staticmethod
+    def load_benchmark_packet(dirpath):
+        if '_packet_info.json' not in os.listdir(dirpath):
+            raise ValueError(f'Packet info file missing.')
+
+        packet = json.load(open(f'{dirpath}/_packet_info.json', 'r'))
+
+
+        problem_files = [fname for fname in os.listdir(dirpath) if fname != '_packet_info.json']
+        # May the lord forgive me for what I'm about to do
+        problem_files.sort(key=lambda fname: int(fname[:fname.index(".")]))
+        problem_list = [CSProblem.from_file(f'{dirpath}/{fname}') for fname in problem_files]
+
+
+
+
+        packet['problem_list'] = problem_list
+        return packet
+
+
+
+
+
+
 
 
 

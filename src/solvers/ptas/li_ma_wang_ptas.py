@@ -39,7 +39,7 @@ class LiMaWangPTASSolver(AbstractSolver):
         times_lp = 0
         times_force = 0
 
-        for i, subset_index_list in tqdm(enumerate(combinations(range(n), r)), total=total_iters):
+        for i, subset_index_list in enumerate(combinations(range(n), r)):
             subset_strings = [original_string_set[i] for i in subset_index_list]
             Q = utils.Q_all(subset_strings)
             P = [j for j in range(m) if j not in Q]
