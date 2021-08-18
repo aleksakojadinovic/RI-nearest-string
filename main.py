@@ -35,11 +35,23 @@ if __name__ == '__main__':
     #
     # Benchmarker.save_benchmark_packet(n_packet, 'bps', packet_name_prefix='testing_n')
 
-    n_packet = Benchmarker.load_benchmark_packet('bps/testing_n_bp_n_25-500')
+    # n_packet = Benchmarker.load_benchmark_packet('bps/testing_n_bp_n_25-500')
 
-    df = Benchmarker.test_solver_against_problems(AntColonySolver(), n_packet)
-    df.to_csv('benchmarking_results/testing_n_ants.csv')
+    # m_packet = Benchmarker.get_benchmark_packet({'alphabet': ['0', '1'], 'n': 10},
+    #                                             target_param_range=[25, 50, 75, 100, 125, 175, 200, 225, 250, 275, 300, 325, 350, 375, 400, 425, 450, 475, 500],
+    #                                             target_param_name='m')
     #
+    # Benchmarker.save_benchmark_packet(m_packet, 'bps', packet_name_prefix='testing_m')
+    # m_packet = Benchmarker.get_benchmark_packet({'alphabet': ['a', 'c', 't', 'g'], 'n': 10},
+    #                                             target_param_range=[25, 50, 75, 100, 125, 175, 200, 225, 250, 275, 300, 325, 350, 375, 400, 425, 450, 475, 500],
+    #                                             target_param_name='m')
+    #
+    # Benchmarker.save_benchmark_packet(m_packet, 'bps', packet_name_prefix='testing_m')
+
+    m_packet = Benchmarker.load_benchmark_packet('bps/testing_m_bp_m_25-500')
+    df = Benchmarker.test_solver_against_problems(GeneticSolver(), m_packet)
+    df.to_csv('benchmarking_results/testing_m_genetic_just_in_case.csv')
+
 
     # nvm = SimplePTASSolver().run_and_time(CSProblem.from_file('bps/testing_n_bp_n_25-500/50.txt'))
     # print(nvm)

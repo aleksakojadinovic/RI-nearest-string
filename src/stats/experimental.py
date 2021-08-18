@@ -35,6 +35,7 @@ class Benchmarker:
             p_qualities = [res.quality for res in p_results]
             p_objective_qualities = [res.objective_quality for res in p_results]
 
+
             p_avg_time  = mean(p_times)
             p_avg_score = mean(p_scores)
             p_avg_quality = 100.0 * mean(p_qualities)
