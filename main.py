@@ -24,7 +24,16 @@ import pandas as pd
 import cProfile
 
 if __name__ == '__main__':
+    # demonstration_packet = Benchmarker.get_benchmark_packet({'alphabet': ['0', '1'], 'n':10},
+    #                                                         target_param_range=range(2, 10),
+    #                                                         target_param_name='String length')
+    #
+    # Benchmarker.save_benchmark_packet(demonstration_packet, 'bps')
+    # demonstration_packet = Benchmarker.load_benchmark_packet('bps/bp_String length_2-9')
+    # df = Benchmarker.test_solver_against_problems(GeneticSolver(), demonstration_packet)
+    # df.to_csv("benchmarking_results/demonstration.csv")
     pass
+
 
 
 
