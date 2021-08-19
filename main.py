@@ -24,13 +24,7 @@ import pandas as pd
 import cProfile
 
 if __name__ == '__main__':
-    sols_path = 'results_csp_rnd.csv'
-
-
-
-    problem = CSProblem(4, 3, ['acct', 'aagt', 'cagt'], ['a', 'c', 't', 'g'])
-    print(PruningSolver().run_and_time(problem))
-#
+    pass
 
 
 
