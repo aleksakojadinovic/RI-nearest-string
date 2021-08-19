@@ -50,8 +50,6 @@ class AntColonySolver(AbstractSolver):
             local_best_metric = m
             for _ in range(colony_size):
                 ant = ''.join(fast_pick(alphabet, world_trails[next_character_index], trail_row_wise_sums[next_character_index]) for next_character_index in range(m))
-                if ant is None:
-                    print()
                 ant_metric = utils.problem_metric(ant, strings)
 
                 if ant_metric <= local_best_metric:
