@@ -28,10 +28,8 @@ if __name__ == '__main__':
 
 
 
-    a_packet = Benchmarker.load_benchmark_packet('bps/testing_a_bp_alphabet_size_10-90')
-
-    df = Benchmarker.test_solver_against_problems(AntColonySolver(), a_packet)
-    # df.to_csv('benchmarking_results/testing_a_ptas.csv')
+    problem = CSProblem(4, 3, ['acct', 'aagt', 'cagt'], ['a', 'c', 't', 'g'])
+    print(PruningSolver().run_and_time(problem))
 #
 
 
