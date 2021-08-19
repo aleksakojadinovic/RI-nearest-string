@@ -4,12 +4,16 @@ import string
 import utils
 from abstractions import CSProblem
 
+alphabet_choice_set = list(set(list(string.ascii_letters) + [str(i) for i in range(10)] + list('!@#$%^&*()-=_+[]{};"\\:|,./<>/')))
+
 def random_alphabet(length):
     alph = set()
     while True:
         if len(alph) == length:
             break
-        letter = random.choice(string.ascii_letters)
+        letter = random.choice(alphabet_choice_set)
+        if letter in alph:
+            continue
         alph.add(letter)
 
     return list(alph)
@@ -28,8 +32,15 @@ def random_problem(n, alphabet, m):
 
 
 # TODO: this doesnt work now
-def random_problems_over_alph_size(alph_range, n, string_length):
-    return [random_problem(n, i, string_length) for i in alph_range]
+def random_problems_over_alph_size(alph_range, n, m):
+    ps = []
+    for a_size in alph_range:
+        alphabet = random_alphabet(a_size)
+        strings = random_strings(n, alphabet, m)
+        ps.append(CSProblem(m, n, strings, alphabet))
+    return ps
+
+
 
 def random_problems_over_string_size(m_range, alphabet, n):
     ps = []

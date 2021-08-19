@@ -38,6 +38,27 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\benchmarking_results\testing_a_ants.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\benchmarking_results\testing_a_genetic.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\benchmarking_results\testing_a_ptas.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\benchmarking_results\testing_m_ants.csv">
           <value>
             <Attribute>
@@ -59,21 +80,7 @@
             </Attribute>
           </value>
         </entry>
-        <entry key="\benchmarking_results\testing_m_genetic_up_mutation.csv">
-          <value>
-            <Attribute>
-              <option name="separator" value="," />
-            </Attribute>
-          </value>
-        </entry>
         <entry key="\benchmarking_results\testing_m_ptas.csv">
-          <value>
-            <Attribute>
-              <option name="separator" value="," />
-            </Attribute>
-          </value>
-        </entry>
-        <entry key="\benchmarking_results\testing_n_ant.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />
